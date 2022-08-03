@@ -1,0 +1,3 @@
+./books_flask/.idea/*
+./books_flask/__pycache__/*
+./books_vue/books/node_modules/*
