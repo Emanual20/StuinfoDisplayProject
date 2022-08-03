@@ -69,7 +69,7 @@ def handler_404_error(err):
 
 
 @app.route('/user_stuinfos', methods=['GET', 'POST'])
-def get_user_stuinfos(stu_uuid):
+def get_specific_stuinfos(stu_uuid):
     book = Book()
     sql_data = book.get_stu_infos(stu_uuid)
     print(sql_data)
@@ -77,6 +77,18 @@ def get_user_stuinfos(stu_uuid):
         "resCode": 0, 
         "data": sql_data,
         "message": "request successful" 
+    }
+    return jsonify(resData)
+
+
+@app.route('/get_stuinfos', methods=['GET', 'POST'])
+def get_all_stuinfos():
+    book = Book()
+    res = book.get_allstu_infos()
+    resData = {
+        "resCode": 0,  # 非0即错误 1
+        "data": res,  # 数据位置，一般为数组
+        "message": 'Successful get all student infos'
     }
     return jsonify(resData)
 
@@ -232,209 +244,6 @@ def get_cates_infos(book_cate):
         return jsonify(resData)
 
 
-# 图书首页信息
-@app.route('/book/<int:book_id>', methods=['POST'])
-def get_book_infos_by_id(book_id):
-    if request.method == 'POST':
-        get_data = json.loads(request.get_data(as_text=True))
-        key = get_data['key']
-        secretKey = get_data['secretKey']
-        secret_result = get_secret_key(secretKey)
-        if secret_result['request_time'] == '':
-            # 如果这边返回的是空的，说明请求的数据已经被破坏了
-            resData = {
-                "resCode": 1, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '你猜，你使劲猜'
-            }
-            return jsonify(resData)
-        if is_allow_domain_time(secret_result['request_time'], secret_result['request_url']):
-            resData = {
-                "resCode": 1, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '你猜，你使劲猜'
-            }
-            return jsonify(resData)
-        book = Book()
-        sql_data = book.get_book_infos_by_book_id(book_id)
-        if key == 'index':
-            resData = {
-                "resCode": 0, # 非0即错误 1
-                "data": sql_data,# 数据位置，一般为数组
-                "message": '图书的信息'
-            }
-            return jsonify(resData)
-        elif key == "cap20":
-            if len(sql_data) == 0:
-                resData = {
-                    "resCode": 5, # 非0即错误 1
-                    "data": [],# 数据位置，一般为数组
-                    "message": '图书不存在'
-                }
-                return jsonify(resData)
-            cap_20_data = book.get_book_newest_20_caps_by_book_id(book_id)
-            resData = {
-                "resCode": 0, # 非0即错误 1
-                "data": cap_20_data,# 数据位置，一般为数组
-                "message": '最新的20章内容'
-            }
-            return jsonify(resData)
-        elif key == "all":
-            if len(sql_data) == 0:
-                resData = {
-                    "resCode": 5, # 非0即错误 1
-                    "data": [],# 数据位置，一般为数组
-                    "message": '图书不存在'
-                }
-                return jsonify(resData)
-            all_cap_data = book.get_book_all_caps_by_book_id(book_id)
-            resData = {
-                "resCode": 0, # 非0即错误 1
-                "data": all_cap_data,# 数据位置，一般为数组
-                "message": '所有图书信息'
-            }
-            return jsonify(resData)
-        else:
-            resData = {
-                "resCode": 1, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '参数错误'
-            }
-            return jsonify(resData)
-        # book_infos
-    else:
-        resData = {
-            "resCode": 1, # 非0即错误 1
-            "data": [],# 数据位置，一般为数组
-            "message": '请求方法错误'
-        }
-        return jsonify(resData)
-
-
-# 获取图书详情页接口
-@app.route('/book/<int:book_id>/<int:sort_id>', methods=['POST'])
-def get_book_detail_infos(book_id, sort_id):
-    if request.method == 'POST':
-        get_data = json.loads(request.get_data(as_text=True))
-        secretKey = get_data['secretKey']
-        secret_result = get_secret_key(secretKey)
-        if secret_result['request_time'] == '':
-            # 如果这边返回的是空的，说明请求的数据已经被破坏了
-            resData = {
-                "resCode": 1, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '你猜，你使劲猜'
-            }
-            return jsonify(resData)
-        if is_allow_domain_time(secret_result['request_time'], secret_result['request_url']):
-            resData = {
-                "resCode": 1, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '你猜，你使劲猜'
-            }
-            return jsonify(resData)
-        book = Book()
-        sql_book_id_data = book.get_book_infos_by_book_id(book_id)
-        if len(sql_book_id_data) == 0:
-            # 不存在该图书
-            resData = {
-                "resCode": 1, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '不存在该图书信息'
-            }
-            return jsonify(resData)
-        # 该图书存在
-        # print("sql_book_id_data[0]['book_name'] = ", sql_book_id_data[0]['book_name'])
-        sql_detail_data = book.get_book_detail_by_book_id_sort_id(book_id, sort_id)
-
-        next_data = book.get_next_cap_id(book_id, sort_id)
-        print("in flask :next_data = ", next_data)
-        if next_data == None:
-            print("next_data == None")
-            sql_detail_data[0]['next_sort_id'] = ''
-        else:
-            print("next_data != None")
-            sql_detail_data[0]['next_sort_id'] = next_data['sort_id']
-
-        before_data = book.get_before_cap_id(book_id, sort_id)
-        if before_data == None:
-            sql_detail_data[0]['before_sort_id'] = ''
-        else:
-            sql_detail_data[0]['before_sort_id'] = before_data['sort_id']
-
-
-        sql_detail_data[0]['book_name'] = sql_book_id_data[0]['book_name']
-
-
-        resData = {
-            "resCode": 0, # 非0即错误 1
-            "data": sql_detail_data,# 数据位置，一般为数组
-            "message": '所有图书信息'
-        }
-        return jsonify(resData)
-    else:
-        resData = {
-            "resCode": 1, # 非0即错误 1
-            "data": [],# 数据位置，一般为数组
-            "message": '请求方法错误'
-        }
-        return jsonify(resData)
-
-
-# 搜索接口
-@app.route('/search', methods=['POST'])
-def search_infos():
-    if request.method == 'POST':
-        get_data = json.loads(request.get_data(as_text=True))
-        key = get_data['key']
-        secretKey = get_data['secretKey']
-        secret_result = get_secret_key(secretKey)
-        if secret_result['request_time'] == '':
-            resData = {
-                "resCode": 1, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '你猜，你使劲猜'
-            }
-            return jsonify(resData)
-        if is_allow_domain_time(secret_result['request_time'], secret_result['request_url']):
-            resData = {
-                "resCode": 1, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '你猜，你使劲猜'
-            }
-            return jsonify(resData)
-        if is_string_validate(key):
-            resData = {
-                "resCode": 1, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '参数错误'
-            }
-            return jsonify(resData)
-        book = Book()
-        search_data = book.search_infos_by_key(key)
-        if len(search_data) == 0:
-            resData = {
-                "resCode": 0, # 非0即错误 1
-                "data": [],# 数据位置，一般为数组
-                "message": '数据为空'
-            }
-            return jsonify(resData)
-
-        resData = {
-            "resCode": 0, # 非0即错误 1
-            "data": search_data,# 数据位置，一般为数组
-            "message": '搜索结果'
-        }
-        return jsonify(resData)
-    else:
-        resData = {
-            "resCode": 1, # 非0即错误 1
-            "data": [],# 数据位置，一般为数组
-            "message": '请求方法错误'
-        }
-        return jsonify(resData)
-
-
 def is_allow_domain_time(request_time, request_url):
     if(int(time.time() * 1000) - int(request_time) > 300000):
         # 一个加密数据只能在3W毫秒之内访问
@@ -496,6 +305,88 @@ def check_namepw():
             "message": "Password verified failed."
         }
 
+    return jsonify(resData)
+
+
+@app.route('/updatebachelorinfo', methods=['GET', 'POST'])
+def update_bachelorinfo():
+    data = json.loads(request.get_data(as_text=True))
+    if data['key'] != 'update':
+        print('Mismatching operation, fxxk!')
+        resData = {
+            "resCode": 1,  # 非0即错误 1
+            "data": [],  # 数据位置，一般为数组
+            "message": 'failed because mismatching operation'
+        }
+        return jsonify(resData)
+
+    if 'username' not in data.keys():
+        print('no username in data, fxxk!')
+        resData = {
+            "resCode": 1,  # 非0即错误 1
+            "data": [],  # 数据位置，一般为数组
+            "message": 'failed because no username'
+        }
+        return jsonify(resData)
+    username = data['username']
+    if 'infos' not in data.keys():
+        print('no infos in data, fxxk!')
+        resData = {
+            "resCode": 1,  # 非0即错误 1
+            "data": [],  # 数据位置，一般为数组
+            "message": 'failed because no infos'
+        }
+        return jsonify(resData)
+    infos = data['infos']
+    book = Book()
+    res = book.update_bachelordest(username, infos)
+    resData = {
+        "resCode": 0,  # 非0即错误 1
+        "data": [],  # 数据位置，一般为数组
+        "message": 'update successfully'
+    }
+    return jsonify(resData)
+
+
+@app.route('/updatemasterinfo', methods=['GET', 'POST'])
+def update_masterinfo():
+    data = json.loads(request.get_data(as_text=True))
+    if data['key'] != 'update':
+        print('Mismatching operation, fxxk!')
+        resData = {
+            "resCode": 1,  # 非0即错误 1
+            "data": [],  # 数据位置，一般为数组
+            "message": 'failed because mismatching operation'
+        }
+        return jsonify(resData)
+
+    if 'username' not in data.keys():
+        print('no username in data, fxxk!')
+        resData = {
+            "resCode": 1,  # 非0即错误 1
+            "data": [],  # 数据位置，一般为数组
+            "message": 'failed because no username'
+        }
+        return jsonify(resData)
+
+    username = data['username']
+    if 'infos' not in data.keys():
+        print('no infos in data, fxxk!')
+        resData = {
+            "resCode": 1,  # 非0即错误 1
+            "data": [],  # 数据位置，一般为数组
+            "message": 'failed because no infos'
+        }
+        return jsonify(resData)
+
+    infos = data['infos']
+    book = Book()
+    res = book.update_masterdest(username, infos)
+    resData = {
+        "resCode": 0,  # 非0即错误 1
+        "data": [],  # 数据位置，一般为数组
+        "message": 'update successfully'
+    }
     return jsonify(resData)
 
 

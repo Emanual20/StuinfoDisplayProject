@@ -46,10 +46,9 @@ export default {
     Footer
   },
   setup(props, context){
-    const store = useStore();
     let username = ref('');
     let password = ref('');
-    error_message = ref('');
+    let error_message = ref('');
     onMounted(()=>{
       console.log(context.root.$route.path)
     });
@@ -81,7 +80,7 @@ export default {
         this.text = resp.data.message;
         this.retCode = resp.data.data[0];
         console.log("retCode: ", this.retCode);
-        store.dispatch("UpdateUserStateAction", {
+        this.$store.dispatch("UpdateUserStateAction", {
           username: username.value,
           password: password.value,
           is_login: true,

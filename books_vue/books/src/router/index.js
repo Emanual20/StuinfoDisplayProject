@@ -5,6 +5,7 @@ import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import StuinfoView from "../views/StuinfoView.vue";
 import ManageInfoView from "../views/ManageInfoView.vue";
+import ManagePermView from "../views/ManagePermView.vue";
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,13 @@ const routes = [
     path: "/manageinfo/",
     name: "Manageinfo",
     component: ManageInfoView,
+  },
+
+  // 权限管理变更页面
+  {
+    path: '/manageperm/',
+    name: "Manageperm",
+    component: ManagePermView,
   },
 
   // 404 NotFoundPage

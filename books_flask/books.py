@@ -88,34 +88,17 @@ class Book(object):
             data.append(temp)
         return data
 
-    def search_infos_by_key(self, key):
-        sql = "select * from book_infos where book_name='{}' or book_author='{}'".format(key, key)
-        self.cursor.execute(sql)
-        data = []
-        for temp in self.cursor.fetchall():
-            # print("get_book_infos_by_book_id = ", temp)
-            data.append(temp)
-        return data
-
-    # 查询下一章的sql： select * from book_details where book_id=45563 and sort_id>328922 order by sort_id  limit 1
-    def get_next_cap_id(self, book_id, sort_id):
-        sql = "select sort_id from book_details where book_id='{}' and sort_id>'{}' order by sort_id  limit 1".format(book_id, sort_id)
-        self.cursor.execute(sql)
-        # print("下一章：self.cursor.fetchone() = ", self.cursor.fetchone())
-        return self.cursor.fetchone()
-
-    # 查询上一章的sql： select * from book_details where book_id=45563 and sort_id<328922 order by sort_id desc limit 1
-    def get_before_cap_id(self, book_id, sort_id):
-        sql = "select sort_id from book_details where book_id='{}' and sort_id<'{}' order by sort_id desc limit 1".format(book_id, sort_id)
-        self.cursor.execute(sql)
-        # print("上一章：self.cursor.fetchone() = ", self.cursor.fetchone())
-        return self.cursor.fetchone()
-
     # 查询当前学生信息
     def get_stu_infos(self, stu_uuid):
         sql = "select * from user_masterdest where stu_uuid = '{}';".format(stu_uuid)
         self.cursor.execute(sql)
         return self.cursor.fetchone()
+
+    # 查询所有学生信息
+    def get_allstu_infos(self):
+        sql = "SELECT ui.stu_uuid, ui.stu_name FROM user_info as ui WHERE ui.stu_permission = 3;"
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
 
     # 查询当前用户名密码是否正确
     def get_user_password(self, username):
@@ -153,6 +136,36 @@ class Book(object):
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-# book = Book()
-# res = book.get_stu_infos("USER220801001")
-# print(res)
+    # 修改学生个人信息：本科相关
+    def update_bachelordest(self, stu_name, params):
+        sql = "SELECT stu_uuid FROM user_info WHERE stu_name = '{}';".format(stu_name)
+        self.cursor.execute(sql)
+        stu_uuid = self.cursor.fetchone()['stu_uuid']
+        stu_school = params['bachelor_school']
+        stu_city = params['bachelor_city']
+        stu_major = params['bachelor_major']
+        stu_major_trans = params['bachelor_major_trans']
+        stu_major_second = params['bachelor_major_second']
+        sql = "UPDATE stu_info.user_bachelordest as ub SET ub.stu_bachelorschool = '{}', ub.stu_bachelorcity = '{}', ub.stu_bachelormajor = '{}', ub.stu_bachelormajorsecond = '{}' WHERE ub.stu_uuid = '{}';"\
+            .format(stu_school, stu_city, stu_major, stu_major_second, stu_uuid)
+        sql = self.cursor.execute(sql)
+        return self.conn.commit()
+
+    # 修改学生个人信息：本科毕业，即研究生或工作相关
+    def update_masterdest(self, stu_name, params):
+        sql = "SELECT stu_uuid FROM user_info WHERE stu_name = '{}';".format(stu_name)
+        self.cursor.execute(sql)
+        stu_uuid = self.cursor.fetchone()['stu_uuid']
+        stu_desttype = params['master_desttype']
+        stu_dest = params['master_dest']
+        stu_city = params['master_city']
+        stu_major = params['master_major']
+        stu_direction = params['master_direction']
+        stu_masterorphd = params['master_orphd']
+        stu_period = params['master_period']
+        sql = "UPDATE stu_info.user_masterdest as um SET um.stu_desttype = '{}', um.stu_dest = '{}', um.stu_city = '{" \
+              "}', um.stu_mastermajor = '{}', um.stu_direction = '{}', um.stu_masterorphd = '{}', um.stu_masterperiod " \
+              "= '{}' WHERE um.stu_uuid = '{}';"\
+            .format(stu_desttype, stu_dest, stu_city, stu_major, stu_direction, stu_masterorphd, stu_period, stu_uuid)
+        sql = self.cursor.execute(sql)
+        return self.conn.commit()

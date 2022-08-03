@@ -67,7 +67,6 @@ export default {
     Footer
   },
   setup(props, context){
-    const store = useStore();
     let nlist1 = [];
     let nlist2 = [];
 
@@ -103,7 +102,7 @@ export default {
         this.nlist1 = resp.data.data[0];
         this.nlist2 = resp.data.data[1];
         console.log(this.nlist1);
-        store.dispatch("UpdateNlistAction", {
+        this.$store.dispatch("UpdateNlistAction", {
           nlist1: this.nlist1,
           nlist2: this.nlist2,
         });

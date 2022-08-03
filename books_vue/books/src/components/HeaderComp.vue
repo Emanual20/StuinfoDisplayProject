@@ -11,11 +11,17 @@
           </ul>
           <ul  class="navbar-nav ml-auto" v-else>
             <a class="nav-link"> {{ $store.state.user.username }} </a>
-            <!-- <button @click="manageinfo" class="btn position-relative">
-              信息及权限管理
-            </button> -->
-            <!-- <a class="nav-link" @click="logout()"> 退出登录 </a> -->
-            <a class="nav-link" href="/"> 退出登录 </a>
+            <button @click="checkinfo()" class="btn position-relative">
+              查看信息
+            </button>
+            <button @click="manageinfo()" class="btn position-relative">
+              个人信息更新
+            </button>
+            <button @click="manageperm()" class="btn position-relative">
+              权限管理
+            </button>            
+            <a class="nav-link" @click="logout()"> 退出登录 </a>
+            <!-- <a class="nav-link" href="/"> 退出登录 </a> -->
           </ul>
         </b-collapse>
       </b-navbar>
@@ -26,6 +32,7 @@
 import { ref } from "@vue/composition-api";  // ref 定义常量; reactive：定义对象
 import { store } from "../store";
 import { router } from "../router" ;
+import { useStore } from 'vuex';
 // import { use } from "vue/types/umd.js";
 
 export default {
@@ -37,15 +44,21 @@ export default {
       };
     },
     methods:{
+      checkinfo(){
+        this.$router.push({name: 'Stuinfo'});
+      },
       manageinfo(){
-        router.push({name: 'manageinfo'});
-      }, 
+        this.$router.push({name: 'Manageinfo'});
+      },
+      manageperm(){
+        this.$router.push({name: "Manageperm"});
+      },
       logout(){
         console.log("Log out begin..!");
-        store.dispatch("LogoutAction",{
+        this.$store.dispatch("LogoutAction",{
         });
         console.log("Log out finish..!");
-        router.push({name: 'Home'});
+        this.$router.push({name: 'Home'});
       }
     }
 }

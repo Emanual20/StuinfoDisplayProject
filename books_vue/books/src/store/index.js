@@ -23,7 +23,6 @@ export default new Vuex.Store({
       state.user.is_login = user.is_login;
     },
     LogoutMuta(state){
-      console.log("hello?");
       state.user.username = "";
       state.user.password = "";
       state.user.is_login = false;
