@@ -32,62 +32,6 @@ class Book(object):
             data.append(temp)
         return data
 
-    def get_cates_newst_books_30(self, book_cate):
-        sql = "select id, book_name,book_id,book_last_update_time, \
-        book_newest_name,book_newest_url from book_infos \
-        where book_cate='{}' order by book_last_update_time desc limit 30;".format(book_cate)
-        self.cursor.execute(sql)
-        data = []
-        for temp in self.cursor.fetchall():
-            # print(temp)
-            data.append(temp)
-        return data
-
-    def get_cates_most_books_30(self, book_cate):
-        sql = "select id,book_id,book_name,book_author,book_newest_url from book_infos where book_cate='{}' order by book_newest_url desc limit 35;".format(book_cate)
-        self.cursor.execute(sql)
-        data = []
-        for temp in self.cursor.fetchall():
-            # print(temp)
-            data.append(temp)
-        return data
-
-    def get_book_infos_by_book_id(self,book_id):
-        sql = "select * from book_infos where book_id ='{}'".format(book_id)
-        self.cursor.execute(sql)
-        data = []
-        for temp in self.cursor.fetchall():
-            # print("get_book_infos_by_book_id = ", temp)
-            data.append(temp)
-        return data
-
-    def get_book_all_caps_by_book_id(self,book_id):
-        sql = "select id,book_id,sort_id,detail_title from book_details where book_id='{}' order by sort_id".format(book_id)
-        self.cursor.execute(sql)
-        data = []
-        for temp in self.cursor.fetchall():
-            # print("get_book_infos_by_book_id = ", temp)
-            data.append(temp)
-        return data
-
-    def get_book_newest_20_caps_by_book_id(self,book_id):
-        sql = "select id,book_id,sort_id,detail_title from book_details where book_id='{}' order by sort_id desc limit 20".format(book_id)
-        self.cursor.execute(sql)
-        data = []
-        for temp in self.cursor.fetchall():
-            # print("get_book_infos_by_book_id = ", temp)
-            data.append(temp)
-        return data
-
-    def get_book_detail_by_book_id_sort_id(self, book_id, sort_id):
-        sql = "select * from book_details where book_id='{}' and sort_id='{}';".format(book_id, sort_id)
-        self.cursor.execute(sql)
-        data = []
-        for temp in self.cursor.fetchall():
-            # print("get_book_infos_by_book_id = ", temp)
-            data.append(temp)
-        return data
-
     # 查询当前学生信息
     def get_stu_infos(self, stu_uuid):
         sql = "select * from user_masterdest where stu_uuid = '{}';".format(stu_uuid)
@@ -100,9 +44,17 @@ class Book(object):
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
+    # 查询所有学生查看当前学生的权限信息
+    def get_allstuperm_infos(self, stu_uuid):
+        sql = "SELECT tab1.stu_fmuuid as stu_uuid, tab2.stu_name, tab1.stu_permissiontype as value FROM ((SELECT * " \
+              "FROM (stu_info.user_masterpermission as um) WHERE stu_touuid = '{}') as tab1 INNER JOIN (SELECT * FROM " \
+              "stu_info.user_info WHERE user_info.stu_permission <> 0) as tab2 ON tab1.stu_fmuuid = tab2.stu_uuid);".format(stu_uuid)
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
+
     # 查询当前用户名密码是否正确
-    def get_user_password(self, username):
-        sql = "select stu_idcid from user_info where stu_name = '{}';".format(username)
+    def get_user_password(self, username, password):
+        sql = "select stu_uuid, stu_name, stu_idcid from user_info where stu_name = '{}' and stu_idcid = '{}';".format(username, password)
         self.cursor.execute(sql)
         return self.cursor.fetchone()
 
@@ -112,7 +64,7 @@ class Book(object):
         self.cursor.execute(sql)
         stu_uuid = self.cursor.fetchone()['stu_uuid']
         sql = "SELECT tab1.stu_touuid, tab2.stu_desttype, tab2.stu_city, tab2.stu_dest, tab2.stu_mastermajor, " \
-              "tab2.stu_masterorphd, tab2.stu_masterperiod, tab2.stu_masterfurtherinfo FROM (SELECT ump.stu_touuid FROM " \
+              "tab2.stu_masterorphd, tab2.stu_masterperiod, tab2.stu_masterfurtherinfo, tab2.stu_direction FROM (SELECT ump.stu_touuid FROM " \
               "user_masterpermission as ump WHERE ump.stu_fmuuid = '{}' and ump.stu_permissiontype = 1) as tab1 INNER " \
               "JOIN user_masterdest as tab2 ON tab1.stu_touuid = tab2.stu_uuid;".format(stu_uuid)
         self.cursor.execute(sql)
@@ -169,3 +121,25 @@ class Book(object):
             .format(stu_desttype, stu_dest, stu_city, stu_major, stu_direction, stu_masterorphd, stu_period, stu_uuid)
         sql = self.cursor.execute(sql)
         return self.conn.commit()
+
+    # 修改特定学生查看权限：
+    def update_masterpermission(self, stu_name, stu_uuid, params):
+        for param in params:
+            stu_touuid = param['stu_uuid']
+            nvalue = param['value']
+            sql = "UPDATE stu_info.user_masterpermission as sium SET sium.stu_permissiontype = {} WHERE " \
+                  "sium.stu_fmuuid = '{}' and sium.stu_touuid = '{}';".format(nvalue, stu_touuid, stu_uuid)
+            self.cursor.execute(sql)
+            self.conn.commit()
+        return 1
+
+    # 修改所有学生查看权限：
+    def update_allpermission(self, stu_uuid, nvalue, params):
+        for param in params:
+            stu_touuid = param['stu_uuid']
+            sql = "UPDATE stu_info.user_masterpermission as sium SET sium.stu_permissiontype = {} WHERE " \
+                  "sium.stu_fmuuid = '{}' and sium.stu_touuid = '{}';".format(nvalue, stu_touuid, stu_uuid)
+            self.cursor.execute(sql)
+            self.conn.commit()
+        return 1
+

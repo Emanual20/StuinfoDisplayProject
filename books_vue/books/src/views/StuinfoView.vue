@@ -4,8 +4,10 @@
 
     <div class="container">
       <div class="card-body">
-        This is info page. Please <b> Press Button </b> to Access Data: 
+        <h4><b>查看信息: </b></h4>
+        请 <b> 点击右面的按钮 </b> 获取数据: 
         <button type="button" class="btn btn-success" @click="test()"> Button </button>
+        <br>（至于为什么非要点一下，因为我写这个页面的时候只会用按钮绑定事件..但是我写完其他的就不想改了..!）
       </div>
       <table class="table table-striped table-hover">
         <thead>
@@ -14,6 +16,7 @@
             <th scope="col">City</th>
             <th scope="col">Dest</th>
             <th scope="col">Major</th>
+            <th scope="col">Direction</th>
             <th scope="col">MasterorPhd</th>
             <th scope="col">Period</th>
             <th scope="col">Infos</th>
@@ -25,6 +28,7 @@
             <th scope="col"> {{niter1.stu_city}} </th>
             <th scope="col"> {{niter1.stu_dest}} </th>
             <th scope="col"> {{niter1.stu_mastermajor}} </th>
+            <th scope="col"> {{niter1.stu_direction}} </th>
             <th scope="col"> {{niter1.stu_masterorphd}} </th>
             <th scope="col"> {{niter1.stu_masterperiod}} </th>
             <th scope="col"> {{niter1.further_info}} </th>
@@ -34,6 +38,7 @@
             <th scope="col"> {{niter2.stu_city}} </th>
             <th scope="col"> {{niter2.stu_dest}} </th>
             <th scope="col"> {{niter2.stu_mastermajor}} </th>
+            <th scope="col"> {{niter2.stu_direction}} </th>
             <th scope="col"> {{niter2.stu_masterorphd}} </th>
             <th scope="col"> {{niter2.stu_masterperiod}} </th>
             <th scope="col"> {{niter2.further_info}} </th>
@@ -75,8 +80,6 @@ export default {
     });
 
     return{
-      username, 
-      password, 
       nlist1,
       nlist2,
     }

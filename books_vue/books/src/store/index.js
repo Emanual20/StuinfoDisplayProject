@@ -8,6 +8,7 @@ export default new Vuex.Store({
     user:{
       username: "",
       password: "",
+      uuid: "",
       fullName: "",
       is_login: false,
     },
@@ -20,11 +21,13 @@ export default new Vuex.Store({
     UpdateUserStateMuta(state, user){
       state.user.username = user.username;
       state.user.password = user.password;
+      state.user.uuid = user.uuid;
       state.user.is_login = user.is_login;
     },
     LogoutMuta(state){
       state.user.username = "";
       state.user.password = "";
+      state.user.uuid = "";
       state.user.is_login = false;
       state.nlist.nlist1 = [];
       state.nlist.nlist2 = [];
@@ -39,6 +42,7 @@ export default new Vuex.Store({
       context.commit("UpdateUserStateMuta",{
         username: user.username,
         password: user.password,
+        uuid: user.uuid,
         is_login: user.is_login,
       });
     },

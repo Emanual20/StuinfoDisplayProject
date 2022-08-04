@@ -15,13 +15,25 @@ export function GetStudents(){
     })
 }
 
+export function GetStudentsPermission(postParams){
+    return service.request({
+        method: 'post',
+        url: postParams.url,
+        data:{
+            stu_uuid: postParams.stu_uuid,
+            key: postParams.key,
+            secretKey: rsaEncrypt(new Date().getTime()+':'+'www.baidu.com'+':'+'otherinfos')     
+        }
+    })
+}
+
 export function GetInfoPost(postParams){
     return service.request({
         method:'post',
-        url:postParams.url,
+        url: postParams.url,
         data:{
             key: postParams.key,
-            secretKey: rsaEncrypt(new Date().getTime()+':'+'www.baidu.com'+':'+'otherinfos') // 预留字段给加密用
+            secretKey: rsaEncrypt(new Date().getTime()+':'+'www.baidu.com'+':'+'otherinfos')
         }
     })
 }
@@ -33,19 +45,6 @@ export function CheckPwPost(postParams){
         data:{
             username: postParams.username,
             password: postParams.password,
-            key: postParams.key,
-            secretKey: rsaEncrypt(new Date().getTime()+':'+'www.baidu.com'+':'+'otherinfos')
-        }
-    })
-}
-
-export function UpdateInfoPost(postParams){
-    return service.request({
-        method:'post',
-        url:postParams.url,
-        data:{
-            username: postParams.username,
-            infos: postParams.infos,
             key: postParams.key,
             secretKey: rsaEncrypt(new Date().getTime()+':'+'www.baidu.com'+':'+'otherinfos')
         }

@@ -8,12 +8,12 @@
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Username</label>
             <input v-model="username" type="text" class="form-control" id="username" aria-describedby="emailHelp">
-            <div id="emailHelp" class="form-text"><b>Default username is your real name in Chinese.</b></div>
+            <div id="emailHelp" class="form-text"><b>Default username is your real name in Chinese. 如：杨希，王航。</b></div>
         </div>
         <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Password</label>
             <input v-model="password" type="text" class="form-control" id="password"> 
-            <div id="emailHelp" class="form-text"><b>Default Password is your real ID number which with exactly 18 characters.</b></div>
+            <div id="emailHelp" class="form-text"><b>Default Password is your real ID number which with exactly 18 characters. 如：12010420040804181X（瞎编的登陆不上去别试了，我只是想说自己永远18）。</b></div>
         </div>
         <!-- <div class="error-message"> {{ error_message }} </div> -->
         <button type="submit" class="btn btn-primary">Login</button>
@@ -78,11 +78,10 @@ export default {
       });
       CheckPwPost(testParams).then(resp=>{
         this.text = resp.data.message;
-        this.retCode = resp.data.data[0];
-        console.log("retCode: ", this.retCode);
         this.$store.dispatch("UpdateUserStateAction", {
           username: username.value,
           password: password.value,
+          uuid: resp.data.data[0]["stu_uuid"],
           is_login: true,
         });
         // alert(store.state.user.is_login);

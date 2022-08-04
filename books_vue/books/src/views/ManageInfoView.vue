@@ -5,7 +5,7 @@
     <div class="container">
       <div class="card-body">
         <div class="personalinfo">
-        <h4> 个人基本信息: </h4>
+        <h4><b>个人信息更新: </b></h4>
         <b>以下有两个表单，表单的按钮分别只负责当前表单内容的提交和更新。</b>
         <br><br>
 
@@ -128,7 +128,7 @@
 import Header from "../components/HeaderComp.vue";
 import Footer from "../components/FooterComp.vue";
 import { CheckPwPost } from "../apis/read.js";
-import { UpdateInfoPost } from "../apis/read.js";
+import { UpdateInfoPost } from "../apis/update.js";
 import { ref, reactive, onMounted } from "@vue/composition-api";
 import { useStore } from 'vuex';
 import Axios from "axios";
