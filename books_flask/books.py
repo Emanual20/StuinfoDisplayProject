@@ -58,6 +58,14 @@ class Book(object):
         self.cursor.execute(sql)
         return self.cursor.fetchone()
 
+    # 查看当前学生可查看的本科信息
+    def get_bachelor_infos(self):
+        sql = "SELECT user_info.stu_uuid, stu_name, stu_bachelorcity, stu_bachelormajor, stu_bachelorschool, " \
+              "stu_bachelormajorsecond, stu_bachelormajornew FROM user_info inner join user_bachelordest on " \
+              "user_info.stu_uuid = user_bachelordest.stu_uuid WHERE stu_permission = 3; "
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
+
     # 查询当前学生可查看的详细信息
     def get_stu_admittedinfos(self, stu_name):
         sql = "SELECT stu_uuid FROM user_info WHERE stu_name = '{}';".format(stu_name)
@@ -98,8 +106,10 @@ class Book(object):
         stu_major = params['bachelor_major']
         stu_major_trans = params['bachelor_major_trans']
         stu_major_second = params['bachelor_major_second']
-        sql = "UPDATE stu_info.user_bachelordest as ub SET ub.stu_bachelorschool = '{}', ub.stu_bachelorcity = '{}', ub.stu_bachelormajor = '{}', ub.stu_bachelormajorsecond = '{}' WHERE ub.stu_uuid = '{}';"\
-            .format(stu_school, stu_city, stu_major, stu_major_second, stu_uuid)
+        sql = "UPDATE stu_info.user_bachelordest as ub SET ub.stu_bachelorschool = '{}', ub.stu_bachelorcity = '{}', " \
+              "ub.stu_bachelormajor = '{}', ub.stu_bachelormajorsecond = '{}', ub.stu_bachelormajornew = '{}' WHERE " \
+              "ub.stu_uuid = '{}';"\
+            .format(stu_school, stu_city, stu_major, stu_major_second, stu_major_trans, stu_uuid)
         sql = self.cursor.execute(sql)
         return self.conn.commit()
 

@@ -5,10 +5,9 @@ import axios from "axios";
 // console.log("in request.js", process.env.VUE_APP_URL);
 
 // axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? '' : '/api';  //关键代码
-const BASEURL = process.env.NODE_ENV === "production" ? "/api" : "/api";
+const BASEURL = process.env.NODE_ENV === "production" ? "http://47.92.3.75:8889" : "/api";
 // console.log("in request.js: BASEURL = ", BASEURL);
 
-// 创建axios
 const service = axios.create({
   baseURL: BASEURL,
   timeout: 1800000
@@ -30,6 +29,7 @@ service.interceptors.response.use(
   function(response) {
     console.log("request.js: response = ", response);
     let data = response.data;
+    console.log("response data is:", data);
     if (data.resCode != 0) {
       // 服务器有响应，但是并不是想要的数据
       // Message.error(data.message);
@@ -50,5 +50,4 @@ service.interceptors.response.use(
   }
 );
 
-// 对外暴露接口
 export default service;

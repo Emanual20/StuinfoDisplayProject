@@ -57,7 +57,7 @@ export function FetchAdmittedInfoPost(postParams){
         url:postParams.url,
         data:{
             username: postParams.username,
-            key: postParams.key, // newest 
+            key: postParams.key,
             secretKey: rsaEncrypt(new Date().getTime()+':'+'www.baidu.com'+':'+'otherinfos') // 预留字段给加密用
         }
     })

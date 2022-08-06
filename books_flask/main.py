@@ -19,8 +19,18 @@ import random
 }
 """
 
+
+def after_request(response):
+    response.headers['Access-Control-Allow-Origin'] = request.headers.get('Origin')
+    response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization,Accept,Origin,Referer,User-Agent'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
+
+
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
+app.after_request(after_request)
 
 
 # 检查是否含有特殊字符
@@ -72,6 +82,7 @@ def handler_404_error(err):
 def get_specific_stuinfos(stu_uuid):
     book = Book()
     sql_data = book.get_stu_infos(stu_uuid)
+    print(stu_uuid, " request specific stuinfos")
     print(sql_data)
     resData = {
         "resCode": 0, 
@@ -108,6 +119,7 @@ def get_all2stu_perminfos():
     book = Book()
     stu_uuid = data['stu_uuid']
     res = book.get_allstuperm_infos(stu_uuid)
+    print(stu_uuid, " request all the data it can check")
     resData = {
         "resCode": 0,
         "data": res,
@@ -129,17 +141,22 @@ def fetch_admitted_info():
         return jsonify(resData)
     book = Book()
     nusername = data['username']
+    print(nusername, "request all the admitted info he can check")
+    res_bachelor = book.get_bachelor_infos()
     res_admitted = book.get_stu_admittedinfos(nusername)
     res_forbidden = book.get_stu_forbiddeninfos(nusername)
     res_stunameinfo = book.get_uuid2stuname()
     stuname2info = {}
     for each in res_stunameinfo:
         stuname2info[each['stu_uuid']] = each['stu_name']
-    print(res_admitted)
-    print(res_forbidden)
 
     for iter in res_admitted:
         iter['stu_touuid'] = stuname2info[iter['stu_touuid']]
+        DestType = iter['stu_desttype']
+        if DestType == 0:
+            iter['stu_dest'] = "未知"
+        elif DestType == 4:
+            iter['stu_dest'] = "待定"
 
     for iter in res_forbidden:
         # iter['stu_touuid'] = stuname2info[iter['stu_touuid']]
@@ -161,7 +178,7 @@ def fetch_admitted_info():
         iter['stu_direction'] = None
     resData = {
         "resCode": 0,  # 非0即错误 1
-        "data": [res_admitted, res_forbidden],  # 数据位置，一般为数组
+        "data": [res_bachelor, res_admitted, res_forbidden],  # 数据位置，一般为数组
         "message": 'Successfully fetch all the admitted data of this user'
     }
     return jsonify(resData)
@@ -169,13 +186,6 @@ def fetch_admitted_info():
 
 def is_allow_domain_time(request_time, request_url):
     if(int(time.time() * 1000) - int(request_time) > 300000):
-        # 一个加密数据只能在3W毫秒之内访问
-        # resData = {
-        #     "resCode": 1, # 非0即错误 1
-        #     "data": [],# 数据位置，一般为数组
-        #     "message": '你猜，你使劲猜'
-        # }
-        # return jsonify(resData)
         return True
     if request_url not in REQUSET_LISTS:
         # 只有指定的域名才能访问
@@ -196,16 +206,16 @@ def check_namepw():
     if 'username' not in data.keys():
         print('no username in data, fxxk!')
         resData = {
-            "resCode": 1,  # 非0即错误 1
-            "data": [],  # 数据位置，一般为数组
+            "resCode": 1,
+            "data": [],
             "message": 'failed because no username'
         }
         return jsonify(resData)
     if 'password' not in data.keys():
         print('no password in data, fxxk!')
         resData = {
-            "resCode": 1,  # 非0即错误 1
-            "data": [],  # 数据位置，一般为数组
+            "resCode": 1,
+            "data": [],
             "message": 'failed because no password'
         }
         return jsonify(resData)
@@ -213,7 +223,7 @@ def check_namepw():
     nusername = data['username']
     npassword = data['password']
     res_nuserinfo = book.get_user_password(nusername, npassword)
-    print("matching record: ", res_nuserinfo)
+    print(nusername, "request login", ", matching record: ", res_nuserinfo)
     flag = res_nuserinfo is None
     resData = {
         "resCode": int(flag),
@@ -229,8 +239,8 @@ def update_bachelorinfo():
     if data['key'] != 'update':
         print('Mismatching operation, fxxk!')
         resData = {
-            "resCode": 1,  # 非0即错误 1
-            "data": [],  # 数据位置，一般为数组
+            "resCode": 1,
+            "data": [],
             "message": 'failed because mismatching operation'
         }
         return jsonify(resData)
@@ -238,17 +248,18 @@ def update_bachelorinfo():
     if 'username' not in data.keys():
         print('no username in data, fxxk!')
         resData = {
-            "resCode": 1,  # 非0即错误 1
-            "data": [],  # 数据位置，一般为数组
+            "resCode": 1,
+            "data": [],
             "message": 'failed because no username'
         }
         return jsonify(resData)
     username = data['username']
+    print(username, " update its bachelor info")
     if 'infos' not in data.keys():
         print('no infos in data, fxxk!')
         resData = {
-            "resCode": 1,  # 非0即错误 1
-            "data": [],  # 数据位置，一般为数组
+            "resCode": 1,
+            "data": [],
             "message": 'failed because no infos'
         }
         return jsonify(resData)
@@ -256,8 +267,8 @@ def update_bachelorinfo():
     book = Book()
     res = book.update_bachelordest(username, infos)
     resData = {
-        "resCode": 0,  # 非0即错误 1
-        "data": [],  # 数据位置，一般为数组
+        "resCode": 0,
+        "data": [],
         "message": 'update successfully'
     }
     return jsonify(resData)
@@ -269,8 +280,8 @@ def update_masterinfo():
     if data['key'] != 'update':
         print('Mismatching operation, fxxk!')
         resData = {
-            "resCode": 1,  # 非0即错误 1
-            "data": [],  # 数据位置，一般为数组
+            "resCode": 1,
+            "data": [],
             "message": 'failed because mismatching operation'
         }
         return jsonify(resData)
@@ -278,18 +289,19 @@ def update_masterinfo():
     if 'username' not in data.keys():
         print('no username in data, fxxk!')
         resData = {
-            "resCode": 1,  # 非0即错误 1
-            "data": [],  # 数据位置，一般为数组
+            "resCode": 1,
+            "data": [],
             "message": 'failed because no username'
         }
         return jsonify(resData)
 
     username = data['username']
+    print(username, " update its master info")
     if 'infos' not in data.keys():
         print('no infos in data, fxxk!')
         resData = {
-            "resCode": 1,  # 非0即错误 1
-            "data": [],  # 数据位置，一般为数组
+            "resCode": 1,
+            "data": [],
             "message": 'failed because no infos'
         }
         return jsonify(resData)
@@ -298,8 +310,8 @@ def update_masterinfo():
     book = Book()
     res = book.update_masterdest(username, infos)
     resData = {
-        "resCode": 0,  # 非0即错误 1
-        "data": [],  # 数据位置，一般为数组
+        "resCode": 0,
+        "data": [],
         "message": 'update successfully'
     }
     return jsonify(resData)
@@ -329,6 +341,7 @@ def update_permission():
     username = data['username']
     stu_uuid = data['stu_uuid']
     infos = data['infos']
+    print(username, " update its readable permission")
 
     book = Book()
     ret_info = book.update_masterpermission(username, stu_uuid, infos)
@@ -373,12 +386,12 @@ def update_allpermissions():
         return jsonify(resData)
 
     stu_uuid = data['stu_uuid']
+    print(stu_uuid, " update all its readable permission")
     infos = data['infos']
     permsvalue = data['allpermvalue']
 
     book = Book()
     ret_info = book.update_allpermission(stu_uuid, permsvalue, infos)
-    print(ret_info)
 
     resData = {
         "resCode": 0,  # 非0即错误 1
@@ -391,11 +404,11 @@ def update_allpermissions():
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
     book = Book()
-    arrData = book.get_stu_infos_limit()
-    print("arrData = ", arrData)
+    arrData = "Please do not hack this database."
     return jsonify(arrData)
 
 
 if __name__ == '__main__':
     print("__name__ = ", __name__)
     app.run(host='127.0.0.1', port=1943, debug=True)
+    # app.run(host='0.0.0.0', port=8889, debug=True)

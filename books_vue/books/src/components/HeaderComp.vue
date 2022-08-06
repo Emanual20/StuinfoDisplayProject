@@ -10,18 +10,11 @@
             <a class="nav-link" href="/login/">登录</a>
           </ul>
           <ul  class="navbar-nav ml-auto" v-else>
-            <a class="nav-link"> {{ $store.state.user.username }} </a>
-            <button @click="checkinfo()" class="btn position-relative">
-              查看信息
-            </button>
-            <button @click="manageinfo()" class="btn position-relative">
-              个人信息更新
-            </button>
-            <button @click="manageperm()" class="btn position-relative">
-              权限管理
-            </button>            
+            <a class="nav-link" @click="checkselfinfo()"> {{ $store.state.user.username }} </a>
+            <a class="nav-link" @click="checkstuinfo()"> 查看信息 </a>
+            <a class="nav-link" @click="manageinfo()"> 个人信息更新 </a>
+            <a class="nav-link" @click="manageperm()"> 权限管理 </a>      
             <a class="nav-link" @click="logout()"> 退出登录 </a>
-            <!-- <a class="nav-link" href="/"> 退出登录 </a> -->
           </ul>
         </b-collapse>
       </b-navbar>
@@ -44,7 +37,10 @@ export default {
       };
     },
     methods:{
-      checkinfo(){
+      checkselfinfo(){
+        this.$router.push({name: 'Selfinfo'});
+      },
+      checkstuinfo(){
         this.$router.push({name: 'Stuinfo'});
       },
       manageinfo(){

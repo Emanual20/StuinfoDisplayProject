@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import StuinfoView from "../views/StuinfoView.vue";
+import SelfinfoView from "../views/SelfinfoView.vue";
 import ManageInfoView from "../views/ManageInfoView.vue";
 import ManagePermView from "../views/ManagePermView.vue";
 
@@ -29,6 +30,13 @@ const routes = [
     path: "/stuinfo/",
     name: "Stuinfo",
     component: StuinfoView,
+  },
+
+  // 个人信息详情页
+  {
+    path: '/selfinfo/',
+    name: "Selfinfo",
+    component: SelfinfoView,
   },
 
   // 个人信息变更页面

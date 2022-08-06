@@ -13,8 +13,9 @@ export default new Vuex.Store({
       is_login: false,
     },
     nlist:{
-      nlist1: [],
-      nlist2: [],
+      nlist0: [], // bachelor info
+      nlist1: [], // graduation info admitted
+      nlist2: [], // graduation info forbiddened
     }
   },
   mutations: {
@@ -29,10 +30,12 @@ export default new Vuex.Store({
       state.user.password = "";
       state.user.uuid = "";
       state.user.is_login = false;
+      state.nlist.nlist0 = [];
       state.nlist.nlist1 = [];
       state.nlist.nlist2 = [];
     },
     UpdateNlistMuta(state, nlist){
+      state.nlist.nlist0 = nlist.nlist0;
       state.nlist.nlist1 = nlist.nlist1;
       state.nlist.nlist2 = nlist.nlist2;
     }
@@ -51,6 +54,7 @@ export default new Vuex.Store({
     },
     UpdateNlistAction(context, nlist){
       context.commit("UpdateNlistMuta", {
+        nlist0: nlist.nlist0, 
         nlist1: nlist.nlist1,
         nlist2: nlist.nlist2,
       });

@@ -8,16 +8,19 @@
         <h4><b> 权限管理: </b></h4>
         若您想一键修改<b>所有同学</b>对您详细个人信息可查看权限，请使用下述选项（勾选表示可见，反之亦然）。<br>
 
+        <button type="button" @click.prevent="UpdateAllPermissions()" class="btn btn-success">确认修改</button>
+        ps: 这个按钮是用来修改所有同学查看权限的，只为方便一键修改，如需修改单独权限请点下面一组的button...
+
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" role="switch" v-model="allpermData.permvalue" id="allpermData.permvalue" checked>
           <label class="form-check-label" for="flexSwitchCheckChecked">允许所有同学查看详细信息</label>
         </div>
 
-        <button type="button" @click.prevent="UpdateAllPermissions()" class="btn btn-success">确认修改</button>
-        ps: 这个按钮是给修改所有同学查看权限的，只为方便一键修改，如需修改单独权限请点下面一组的button...
-
         <br>
         <br>若您想单独修改<b>某个同学</b>对您详细个人信息的查看权限，请使用下述选项（勾选表示可见，反之亦然）。<br>
+
+        <button type="button" @click.prevent="UpdatePermission()" class="btn btn-success">确认修改</button>
+        ps: 这个按钮是用来修改单个同学查看权限的，如需一键修改所有查看权限请点上面一组的button...
 
         <div v-for="(niter, index) in studentData.students" :key="index">
           <div class="form-check form-switch">
@@ -25,8 +28,6 @@
             <label class="form-check-label" for="flexSwitchCheckChecked">允许同学:{{niter['stu_name']}} 查看</label>
           </div>
         </div>
-
-        <button type="button" @click.prevent="UpdatePermission()" class="btn btn-success">确认修改</button>
 
         </div>
       </div>
@@ -81,13 +82,7 @@ export default {
     GetStudentsPermission(GetStudentsPermissionParams).then(response => {
       studentData.students = response.data.data;
       console.log(studentData.students);
-      // for(let item of studentData.students){
-      //   item['value'] = 0;
-      // }
-      // console.log(studentData.students);
     });
-
-
 
     return{
       username, 
