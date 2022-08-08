@@ -77,11 +77,9 @@ export default {
         key: 'getpermission',
         stu_uuid: store.state.user.uuid
     });
-    console.log("uuid:", GetStudentsPermissionParams.stu_uuid);
 
     GetStudentsPermission(GetStudentsPermissionParams).then(response => {
       studentData.students = response.data.data;
-      console.log(studentData.students);
     });
 
     return{

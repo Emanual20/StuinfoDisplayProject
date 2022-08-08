@@ -1,3 +1,4 @@
+import datetime
 from pymysql import connect
 from pymysql.cursors import DictCursor # 为了返回字典形式
 from settings import MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
@@ -31,6 +32,12 @@ class Book(object):
             # print(temp)
             data.append(temp)
         return data
+
+    # 查询和当前请求邮箱(登陆主键)相同的记录
+    def get_matchemail(self, stu_name):
+        sql = "select * from user_info where stu_name = '{}'".format(stu_name)
+        self.cursor.execute(sql)
+        return self.cursor.fetchone()
 
     # 查询当前学生信息
     def get_stu_infos(self, stu_uuid):
@@ -95,6 +102,34 @@ class Book(object):
         sql = "SELECT stu_uuid, stu_name FROM user_info;"
         self.cursor.execute(sql)
         return self.cursor.fetchall()
+
+    # 修改用户密码
+    def update_userpassword(self, emailaddress, stu_npassword):
+        sql = "UPDATE user_info SET stu_idcid = '{}' WHERE stu_name = '{}';".format(stu_npassword, emailaddress)
+        self.cursor.execute(sql)
+        return self.conn.commit()
+
+    # 注册新用户信息
+    def insert_stuifonewuser(self, emailaddress, stu_name, stu_password):
+        now_time = datetime.datetime.now().strftime("%Y-%m-%d").split('-')
+        now_year = now_time[0]
+        now_month = now_time[1]
+        now_day = now_time[2]
+        stu_uuid = "USER" + str(now_year)[-2:] + str(now_month) + str(now_day) + "000"
+        sql = "SELECT stu_uuid FROM stu_info.user_info WHERE stu_uuid > '{}' ORDER BY stu_uuid DESC LIMIT 1;".format(stu_uuid)
+        self.cursor.execute(sql)
+        stu_uuid_base = self.cursor.fetchone()
+        if stu_uuid_base is not None:
+            new_uuid = str(int(stu_uuid_base['stu_uuid'][-3:]) + 1)
+            stu_uuid = stu_uuid[0:-3] + ("0" * (3 - len(new_uuid))) + new_uuid
+        else:
+            stu_uuid = stu_uuid[0:-3] + "001"
+        sql = "INSERT INTO stu_info.user_info (stu_uuid, stu_name, stu_nickname, stu_idcid) VALUES ('{}', '{}', '{}', " \
+              "'{}')".format(stu_uuid, emailaddress, stu_name, stu_password)
+        self.cursor.execute(sql)
+        self.conn.commit()
+        # return 0 means successful
+        return 0
 
     # 修改学生个人信息：本科相关
     def update_bachelordest(self, stu_name, params):

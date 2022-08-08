@@ -104,6 +104,50 @@ def get_all_stuinfos():
     return jsonify(resData)
 
 
+@app.route('/registernewuser', methods=['GET', 'POST'])
+def register_newuser():
+    data = json.loads(request.get_data(as_text=True))
+    book = Book()
+    if 'emailaddress' not in data.keys():
+        print("There is no emailaddress in data")
+        resData = {
+            "resCode": 1,
+            "data": [],
+            "message": 'failed because no emailaddress'
+        }
+        return jsonify(resData)
+
+    emailaddress = data['emailaddress']
+    res_matchusername = book.get_matchemail(emailaddress)
+    if res_matchusername is not None:
+        print("In register_newuser: Email already exists ", emailaddress)
+        resData = {
+            "resCode": 1,
+            "data": [],
+            "message": 'Email already exists ' + emailaddress
+        }
+        return jsonify(resData)
+
+    print(data)
+    if 'username' not in data.keys() or 'password' not in data.keys():
+        print("There is no username or password in data")
+        resData = {
+            "resCode": 1,
+            "data": [],
+            "message": 'failed because no username or password'
+        }
+        return jsonify(resData)
+    username = data['username']
+    password = data['password']
+    retCode = book.insert_stuifonewuser(emailaddress, username, password)
+    resData = {
+        "resCode": retCode,
+        "data": [],
+        "message": 'Successfully register a new account.'
+    }
+    return jsonify(resData)
+
+
 @app.route('/get_all2stuperminfos', methods=['GET', 'POST'])
 def get_all2stu_perminfos():
     data = json.loads(request.get_data(as_text=True))
@@ -229,6 +273,29 @@ def check_namepw():
         "resCode": int(flag),
         "data": [res_nuserinfo],
         "message": "Password verified finished."
+    }
+    return jsonify(resData)
+
+
+@app.route('/updatepassword', methods=['GET', 'POST'])
+def update_password():
+    data = json.loads(request.get_data(as_text=True))
+    if 'username' not in data.keys() or 'npassword' not in data.keys():
+        print('Missing username or npassword in data')
+        resData = {
+            "resCode": 1,
+            "data": [],
+            "message": 'failed because missing username or npassword in data'
+        }
+        return jsonify(resData)
+    username = data['username']
+    new_password = data['npassword']
+    book = Book()
+    RetCode = book.update_userpassword(username, new_password)
+    resData = {
+        "resCode": 0,
+        "data": [],
+        "message": 'successful update your password, please login again..!'
     }
     return jsonify(resData)
 

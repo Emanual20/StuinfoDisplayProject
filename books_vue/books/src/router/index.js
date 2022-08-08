@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import LoginView from "../views/LoginView.vue";
+import RegisterView from "../views/RegisterView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import StuinfoView from "../views/StuinfoView.vue";
 import SelfinfoView from "../views/SelfinfoView.vue";
@@ -23,6 +24,13 @@ const routes = [
     path: "/login/",
     name: "LoginView",
     component: LoginView
+  },
+
+  // 注册页面
+  {
+    path: "/register/",
+    name: "RegisterView",
+    component: RegisterView
   },
 
   // 学生信息详情页

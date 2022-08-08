@@ -13,7 +13,7 @@
         <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Password</label>
             <input v-model="password" type="text" class="form-control" id="password"> 
-            <div id="emailHelp" class="form-text"><b>Default Password is your real ID number which with exactly 18 characters. 如：12010420040804181X（瞎编的登陆不上去别试了，我只是想说自己永远18）。</b></div>
+            <div id="emailHelp" class="form-text"><b>Default Password is your real ID number which with exactly 18 characters. 如：12010420040804181X。</b></div>
         </div>
         <!-- <div class="error-message"> {{ error_message }} </div> -->
         <button type="submit" class="btn btn-primary">Login</button>
@@ -84,7 +84,6 @@ export default {
           uuid: resp.data.data[0]["stu_uuid"],
           is_login: true,
         });
-        // alert(store.state.user.is_login);
         router.push({name: 'Stuinfo'});
       })
       .catch(err=>{

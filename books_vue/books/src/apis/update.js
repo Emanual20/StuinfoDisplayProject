@@ -1,6 +1,19 @@
 import service from "../utils/request.js";
 import { rsaEncrypt } from "../utils/rsa.js";
 
+export function UpdatePasswordPost(postParams){
+    return service.request({
+        method:'post',
+        url:postParams.url,
+        data:{
+            username: postParams.username,
+            npassword: postParams.npassword,
+            key: postParams.key,
+            secretKey: rsaEncrypt(new Date().getTime()+':'+'www.baidu.com'+':'+'otherinfos')
+        }
+    })
+}
+
 export function UpdateInfoPost(postParams){
     return service.request({
         method:'post',
@@ -23,6 +36,20 @@ export function UpdatePermPost(postParams){
             stu_uuid: postParams.stu_uuid,
             allpermvalue: postParams.allpermvalue,
             infos: postParams.infos,
+            key: postParams.key,
+            secretKey: rsaEncrypt(new Date().getTime()+':'+'www.baidu.com'+':'+'otherinfos')
+        }
+    })
+}
+
+export function RegisterUserPost(postParams){
+    return service.request({
+        method:'post',
+        url:postParams.url,
+        data:{
+            emailaddress: postParams.emailaddress,
+            username: postParams.username,
+            password: postParams.password,
             key: postParams.key,
             secretKey: rsaEncrypt(new Date().getTime()+':'+'www.baidu.com'+':'+'otherinfos')
         }

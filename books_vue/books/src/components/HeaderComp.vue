@@ -8,6 +8,7 @@
         <b-collapse id="nav-collapse" is-nav>
           <ul  class="navbar-nav ml-auto" v-if="!$store.state.user.is_login">
             <a class="nav-link" href="/login/">登录</a>
+            <a class="nav-link" href="/register/">注册</a>
           </ul>
           <ul  class="navbar-nav ml-auto" v-else>
             <a class="nav-link" @click="checkselfinfo()"> {{ $store.state.user.username }} </a>
