@@ -5,7 +5,8 @@ import axios from "axios";
 // console.log("in request.js", process.env.VUE_APP_URL);
 
 // axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? '' : '/api';  //关键代码
-const BASEURL = process.env.NODE_ENV === "production" ? "http://47.92.3.75:8889" : "/api";
+const BASEURL =
+  process.env.NODE_ENV === "production" ? "http://47.92.3.75:8890" : "/api";
 // console.log("in request.js: BASEURL = ", BASEURL);
 
 const service = axios.create({

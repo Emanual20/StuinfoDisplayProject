@@ -65,6 +65,37 @@ class Book(object):
         self.cursor.execute(sql)
         return self.cursor.fetchone()
 
+    # 查看当前学生个人信息
+    def get_stu_selfinfo(self, stu_uuid):
+        sql = "SELECT * FROM user_info WHERE stu_uuid = '{}';".format(stu_uuid)
+        print(sql)
+        self.cursor.execute(sql)
+        stu_permission = self.cursor.fetchone()
+        print(stu_permission['stu_permission'])
+        if str(stu_permission['stu_permission']) == '3':
+            sql = "SELECT * FROM user_bachelordest WHERE stu_uuid = '{}';".format(stu_uuid)
+            self.cursor.execute(sql)
+            self_bachelorinfo = self.cursor.fetchone()
+            sql = "SELECT * FROM user_masterdest WHERE stu_uuid = '{}';".format(stu_uuid)
+            self.cursor.execute(sql)
+            self_masterinfo = self.cursor.fetchone()
+            tmp = self_masterinfo['stu_desttype']
+            if tmp == 0:
+                self_masterinfo['stu_desttype'] = "未知"
+            elif tmp == 1:
+                self_masterinfo['stu_desttype'] = "升学-非内地（出国，港澳台等地区）"
+            elif tmp == 2:
+                self_masterinfo['stu_desttype'] = "升学-内地"
+            elif tmp == 3:
+                self_masterinfo['stu_desttype'] = "工作"
+            elif tmp == 4:
+                self_masterinfo['stu_desttype'] = "待定"
+        else:
+            self_bachelorinfo = []
+            self_masterinfo = []
+
+        return [stu_permission, self_bachelorinfo, self_masterinfo]
+
     # 查看当前学生可查看的本科信息
     def get_bachelor_infos(self):
         sql = "SELECT user_info.stu_uuid, stu_name, stu_bachelorcity, stu_bachelormajor, stu_bachelorschool, " \
@@ -73,7 +104,7 @@ class Book(object):
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-    # 查询当前学生可查看的详细信息
+    # 查询当前学生可查看的去向详细信息
     def get_stu_admittedinfos(self, stu_name):
         sql = "SELECT stu_uuid FROM user_info WHERE stu_name = '{}';".format(stu_name)
         self.cursor.execute(sql)
@@ -85,7 +116,7 @@ class Book(object):
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-    # 查询当前学生不可查看的详细信息
+    # 查询当前学生不可查看的去向详细信息
     def get_stu_forbiddeninfos(self, stu_name):
         sql = "SELECT stu_uuid FROM user_info WHERE stu_name = '{}';".format(stu_name)
         self.cursor.execute(sql)
@@ -106,6 +137,13 @@ class Book(object):
     # 修改用户密码
     def update_userpassword(self, emailaddress, stu_npassword):
         sql = "UPDATE user_info SET stu_idcid = '{}' WHERE stu_name = '{}';".format(stu_npassword, emailaddress)
+        self.cursor.execute(sql)
+        return self.conn.commit()
+
+    # 添加新吐槽信息
+    def insert_spitslot(self, stu_uuid, spit_info):
+        sql = "INSERT INTO user_spitslot (stu_uuid, spit_timestamp, spit_info) VALUES ('{}', now(), '{}');".format(stu_uuid, spit_info)
+        print(sql)
         self.cursor.execute(sql)
         return self.conn.commit()
 

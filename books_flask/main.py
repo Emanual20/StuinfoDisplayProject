@@ -8,17 +8,6 @@ import base64
 import time
 import random
 
-"""
-接口说明：
-1.返回的是json数据
-2.结构如下
-{
-    resCode： 0, # 非0即错误 1
-    data： # 数据位置，一般为数组
-    message： '对本次请求的说明'
-}
-"""
-
 
 def after_request(response):
     response.headers['Access-Control-Allow-Origin'] = request.headers.get('Origin')
@@ -224,6 +213,27 @@ def fetch_admitted_info():
         "resCode": 0,  # 非0即错误 1
         "data": [res_bachelor, res_admitted, res_forbidden],  # 数据位置，一般为数组
         "message": 'Successfully fetch all the admitted data of this user'
+    }
+    return jsonify(resData)
+
+
+@app.route('/fetchselfinfo', methods=['GET', 'POST'])
+def fetch_self_info():
+    data = json.loads(request.get_data(as_text=True))
+    if 'stu_uuid' not in data.keys():
+        print('no username in data, fxxk!')
+        resData = {
+            "resCode": 1,  # 非0即错误 1
+            "data": [],  # 数据位置，一般为数组
+            "message": 'failed because no uuid'
+        }
+        return jsonify(resData)
+    book = Book()
+    self_infos = book.get_stu_selfinfo(data['stu_uuid'])
+    resData = {
+        "resCode": 0,
+        "data": self_infos,
+        "message": 'successfully fetch selfinfo'
     }
     return jsonify(resData)
 
@@ -468,6 +478,30 @@ def update_allpermissions():
     return jsonify(resData)
 
 
+@app.route('/updatespitslot', methods=['GET', 'POST'])
+def upload_spitslotinfo():
+    data = json.loads(request.get_data(as_text=True))
+    if data['key'] != 'updatespitslot' or 'stu_uuid' not in data.keys() or 'info' not in data.keys():
+        print('Mismatching info, fxxk!')
+        resData = {
+            "resCode": 1,
+            "data": [],
+            "message": 'failed because mismatching info'
+        }
+        return jsonify(resData)
+    stu_uuid = data['stu_uuid']
+    spit_info = data['info']
+    book = Book()
+    book.insert_spitslot(stu_uuid, spit_info)
+    print(stu_uuid, " upload spit_info: ", spit_info)
+    resData = {
+        "resCode": 0,
+        "data": [],
+        "message": '上传吐槽信息成功！'
+    }
+    return resData
+
+
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
     book = Book()
@@ -478,4 +512,4 @@ def hello_world():
 if __name__ == '__main__':
     print("__name__ = ", __name__)
     app.run(host='127.0.0.1', port=1943, debug=True)
-    # app.run(host='0.0.0.0', port=8889, debug=True)
+    # app.run(host='0.0.0.0', port=8890, debug=True)

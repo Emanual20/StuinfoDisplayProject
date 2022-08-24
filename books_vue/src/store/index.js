@@ -5,27 +5,27 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    user:{
+    user: {
       username: "",
       password: "",
       uuid: "",
       fullName: "",
-      is_login: false,
+      is_login: false
     },
-    nlist:{
+    nlist: {
       nlist0: [], // bachelor info
       nlist1: [], // graduation info admitted
-      nlist2: [], // graduation info forbiddened
+      nlist2: [] // graduation info forbiddened
     }
   },
   mutations: {
-    UpdateUserStateMuta(state, user){
+    UpdateUserStateMuta(state, user) {
       state.user.username = user.username;
       state.user.password = user.password;
       state.user.uuid = user.uuid;
       state.user.is_login = user.is_login;
     },
-    LogoutMuta(state){
+    LogoutMuta(state) {
       state.user.username = "";
       state.user.password = "";
       state.user.uuid = "";
@@ -34,29 +34,29 @@ export default new Vuex.Store({
       state.nlist.nlist1 = [];
       state.nlist.nlist2 = [];
     },
-    UpdateNlistMuta(state, nlist){
+    UpdateNlistMuta(state, nlist) {
       state.nlist.nlist0 = nlist.nlist0;
       state.nlist.nlist1 = nlist.nlist1;
       state.nlist.nlist2 = nlist.nlist2;
     }
   },
   actions: {
-    UpdateUserStateAction(context, user){
-      context.commit("UpdateUserStateMuta",{
+    UpdateUserStateAction(context, user) {
+      context.commit("UpdateUserStateMuta", {
         username: user.username,
         password: user.password,
         uuid: user.uuid,
-        is_login: user.is_login,
+        is_login: user.is_login
       });
     },
-    LogoutAction(context){
+    LogoutAction(context) {
       context.commit("LogoutMuta");
     },
-    UpdateNlistAction(context, nlist){
+    UpdateNlistAction(context, nlist) {
       context.commit("UpdateNlistMuta", {
-        nlist0: nlist.nlist0, 
+        nlist0: nlist.nlist0,
         nlist1: nlist.nlist1,
-        nlist2: nlist.nlist2,
+        nlist2: nlist.nlist2
       });
     }
   },

@@ -4,10 +4,12 @@ import Home from "../views/Home.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
-import StuinfoView from "../views/StuinfoView.vue";
 import SelfinfoView from "../views/SelfinfoView.vue";
+import StuinfoView from "../views/StuinfoView.vue";
+import ChangepwdView from "../views/ChangepwdView.vue";
 import ManageInfoView from "../views/ManageInfoView.vue";
 import ManagePermView from "../views/ManagePermView.vue";
+import SpitslotView from "../views/SpitslotView.vue";
 
 Vue.use(VueRouter);
 
@@ -33,32 +35,46 @@ const routes = [
     component: RegisterView
   },
 
+  // 个人信息展示页
+  {
+    path: "/selfinfo/",
+    name: "Selfinfo",
+    component: SelfinfoView
+  },
+
   // 学生信息详情页
   {
     path: "/stuinfo/",
     name: "Stuinfo",
-    component: StuinfoView,
+    component: StuinfoView
   },
 
-  // 个人信息详情页
+  // 修改密码页
   {
-    path: '/selfinfo/',
-    name: "Selfinfo",
-    component: SelfinfoView,
+    path: "/changepwd/",
+    name: "Changepwd",
+    component: ChangepwdView
   },
 
   // 个人信息变更页面
   {
     path: "/manageinfo/",
     name: "Manageinfo",
-    component: ManageInfoView,
+    component: ManageInfoView
   },
 
   // 权限管理变更页面
   {
-    path: '/manageperm/',
+    path: "/manageperm/",
     name: "Manageperm",
-    component: ManagePermView,
+    component: ManagePermView
+  },
+
+  // 吐槽页面
+  {
+    path: "/spltslot/",
+    name: "Spitslot",
+    component: SpitslotView
   },
 
   // 404 NotFoundPage
@@ -71,7 +87,7 @@ const routes = [
   {
     path: "/:catchAll(.*)",
     redirect: "/404/"
-  },
+  }
 ];
 
 const router = new VueRouter({

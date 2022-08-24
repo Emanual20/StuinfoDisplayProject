@@ -15,7 +15,6 @@ module.exports = {
     if (process.env.NODE_ENV === "production") {
       // 为生产环境修改配置...
       config.mode = "production";
-      // 将每个依赖包打包成单独的js文件
       let optimization = {
         runtimeChunk: "single",
         splitChunks: {
@@ -39,11 +38,9 @@ module.exports = {
         optimization
       });
     } else {
-      // 为开发环境修改配置...
       config.mode = "development";
     }
     Object.assign(config, {
-      // 开发生产共同配置
       resolve: {
         extensions: [".js", ".vue", ".json"], //请求本地json
         alias: {
@@ -71,12 +68,12 @@ module.exports = {
     loaderOptions: {
       sass: {
         // data: '@import "./src/styles/main.scss";'  // 3.0 用这个
-        prependData: '@import "./src/styles/main.scss";'  // 4.0 用这个
+        prependData: '@import "./src/styles/main.scss";' // 4.0 用这个
         // 当前是没有这个路径，也没有这个文件的，不要奇怪
         // 我们去创建它
       },
       scss: {
-        prependData: '@import "./src/styles/main.scss";' 
+        prependData: '@import "./src/styles/main.scss";'
       }
     }
   },
