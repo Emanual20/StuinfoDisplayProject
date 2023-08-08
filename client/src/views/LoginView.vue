@@ -49,7 +49,7 @@
 <script>
 import Header from "../components/HeaderComp.vue";
 import Footer from "../components/FooterComp.vue";
-import { CheckPwPost } from "../apis/read.js";
+import { CheckPwPost, FetchMapInfo } from "../apis/read.js";
 import { ref, reactive, onMounted } from "@vue/composition-api";
 import { useStore } from "vuex";
 import Axios from "axios";
@@ -98,6 +98,22 @@ export default {
             password: password.value,
             uuid: resp.data.data[0]["stu_uuid"],
             is_login: true
+          });
+
+          const FetchInfoParams = reactive({
+            url: "fetchmapinfo",
+            key: "fetchinfo",
+            username: store.state.user.username
+          });
+          FetchMapInfo(FetchInfoParams)
+          .then(resp => {
+            store.dispatch("UpdateNmapAction", {
+              nmap: resp.data.data[0],
+            });
+          })
+          .catch(err => {
+            this.text = "error" + err;
+            alert(this.text);
           });
           router.push({ name: "Selfinfo" });
         })

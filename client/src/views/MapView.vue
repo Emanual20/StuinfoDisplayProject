@@ -41,28 +41,7 @@
       MapContainer,
     },
     setup(props, context) {
-      const FetchInfoParams = reactive({
-        url: "fetchmapinfo",
-        key: "fetchinfo",
-        username: store.state.user.username
-      });
-  
-      FetchMapInfo(FetchInfoParams)
-        .then(resp => {
-          store.dispatch("UpdateNmapAction", {
-            nmap: resp.data.data[0],
-          });
-        })
-        .catch(err => {
-          this.text = "error" + err;
-          alert(this.text);
-        });
-      
       // fetch positions from database, positions for example
-      var bachelor_positions = [
-        [117.17166, 39.13105]
-      ];
-  
       var zoom = 5;
       var zooms = [3, 18];
   
