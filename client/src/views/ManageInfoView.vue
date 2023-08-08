@@ -18,8 +18,8 @@
             >
             <br />
 
-            <form class="row g-3 p-2 mb-2">
-              <div class="col-md-6">
+            <form class="row g-2 p-2 mb-2">
+              <div class="col-md-6 p-2 mb-2">
                 <label for="text" class="form-label">本科学校<b>*</b></label>
                 <input
                   type="text"
@@ -29,7 +29,7 @@
                   placeholder="如：清华大学，南开大学等"
                 />
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 p-2 mb-2">
                 <label for="inputCity" class="form-label"
                   >本科城市<b>*</b></label
                 >
@@ -41,7 +41,7 @@
                   placeholder="如：北京，天津等"
                 />
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6 p-2 mb-2">
                 <label for="text" class="form-label">本科专业</label>
                 <input
                   type="text"
@@ -51,17 +51,7 @@
                   placeholder="如：数学，土木工程等"
                 />
               </div>
-              <div class="col-md-4">
-                <label for="text" class="form-label">本科转入专业</label>
-                <input
-                  type="text"
-                  v-model="bachelor_major_trans"
-                  class="form-control"
-                  id="bachelor_major_trans"
-                  placeholder="如：金融工程，计算机科学与技术等"
-                />
-              </div>
-              <div class="col-md-4">
+              <div class="col-md-6 p-2 mb-2">
                 <label for="text" class="form-label"
                   >本科二专业（双学位、辅修）</label
                 >
@@ -74,17 +64,10 @@
                 />
               </div>
               <div class="col-12">
-                <div class="form-check">
-                  <label class="form-check-label" for="gridCheck">
-                    <b></b>
-                  </label>
-                </div>
-              </div>
-              <div class="col-12">
                 <button
                   @click.prevent="update_bachelor()"
                   type="submit"
-                  class="btn btn-primary"
+                  class="btn btn-primary float-right"
                 >
                   更新
                 </button>
@@ -99,12 +82,9 @@
               ><b>本科毕业去向（读研、工作）相关信息</b></label
             >
             <br />
-            <label for="basic-url" class="form-label"
-              >以下内容不设置合法检查，请根据提示填写。</label
-            >
 
             <form class="row g-3 p-2 mb-2">
-              <div class="col-md-12">
+              <div class="col-md-12 p-1 mb-1">
                 <label for="inputState" class="form-label"
                   >毕业去向类别<b>*</b></label
                 ><br />
@@ -120,7 +100,7 @@
                   <option value="4">待定</option>
                 </select>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 p-1 mb-1">
                 <label for="text" class="form-label"
                   >毕业去向（学校、公司）<b>*</b></label
                 >
@@ -132,7 +112,7 @@
                   placeholder="如：斯坦福大学，中建一局等（最好写全称）"
                 />
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 p-1 mb-1">
                 <label for="text" class="form-label">去向城市<b>*</b></label>
                 <input
                   type="text"
@@ -142,7 +122,7 @@
                   placeholder="如：天津，洛杉矶等"
                 />
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 p-1 mb-1">
                 <label for="inputAddress" class="form-label">专业/岗位</label>
                 <input
                   type="text"
@@ -152,7 +132,7 @@
                   placeholder="如：计算机科学与技术，法务/销售等"
                 />
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 p-1 mb-1">
                 <label for="inputAddress2" class="form-label">研究方向</label>
                 <input
                   type="text"
@@ -162,9 +142,9 @@
                   placeholder="如：模式识别，偏微分方程等"
                 />
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 p-1 mb-1">
                 <label for="inputCity" class="form-label"
-                  >预计毕业年限（以年为单位）</label
+                  >预计毕业年限（年）</label
                 >
                 <input
                   type="text"
@@ -174,27 +154,22 @@
                   placeholder="如：2.5，3等"
                 />
               </div>
-              <div class="col-md-6">
-                <label for="inputCity" class="form-label">硕士或直博</label>
+              <div class="col-md-6 p-1 mb-1">
+                <label for="inputCity" class="form-label">硕博</label>
                 <input
                   type="text"
                   class="form-control"
                   v-model="master_orphd"
                   id="master_orphd"
-                  placeholder="如：RA、硕士、学硕、专硕、直博等"
+                  placeholder="如：学硕、直博等"
                 />
               </div>
 
-              <div class="col-12">
-                <div class="form-check">
-                  <label class="form-check-label" for="gridCheck"></label>
-                </div>
-              </div>
-              <div class="col-12">
+              <div class="col-12 p-1 mb-1">
                 <button
                   @click.prevent="update_master()"
                   type="submit"
-                  class="btn btn-primary"
+                  class="btn btn-primary float-right"
                 >
                   更新
                 </button>
@@ -234,9 +209,7 @@ export default {
     let bachelor_school = "";
     let bachelor_city = "";
     let bachelor_major = "";
-    let bachelor_major_trans = "";
     let bachelor_major_second = "";
-    let error_message = "";
 
     let master_desttype = 0;
     let master_dest = "";
@@ -251,7 +224,6 @@ export default {
       bachelor_school,
       bachelor_city,
       bachelor_major,
-      bachelor_major_trans,
       bachelor_major_second,
       master_desttype,
       master_desttype,
@@ -261,7 +233,6 @@ export default {
       master_direction,
       master_orphd,
       master_period,
-      error_message
     };
   },
 
@@ -282,7 +253,6 @@ export default {
           bachelor_school: bachelor_school.value,
           bachelor_city: bachelor_city.value,
           bachelor_major: bachelor_major.value,
-          bachelor_major_trans: bachelor_major_trans.value,
           bachelor_major_second: bachelor_major_second.value
         }
       });

@@ -65,3 +65,32 @@ def fetch_admitted_info():
         data=[res_bachelor, res_admitted, res_forbidden],
         Message='Successfully fetch admitted data..'
     )
+
+@app.route('/fetchmapinfo', methods=['GET', 'POST'])
+def fetch_map_info():
+    data = json.loads(request.get_data(as_text=True))
+    if 'username' not in data.keys():
+        print('no username in data, fxxk!')
+        resData = {
+            "resCode": 1,
+            "data": [],
+            "message": 'failed because no username'
+        }
+        return jsonify(resData)
+    book = Book()
+    nusername = data['username']
+    print(nusername, "request all the map info")
+    res_highinfo = book.get_stu_highinfos(nusername)
+    res_bachelor = book.get_bachelor_infos(res_highinfo)
+
+    ret_pos_lis = []
+    for each in res_bachelor:
+        xpos, ypos = each['stu_bachelorxpos'], each['stu_bachelorypos']
+        if xpos is not None and ypos is not None:
+            ret_pos_lis.append([xpos, ypos])
+
+    return jsonify(
+        RetCode=0,
+        data=[ret_pos_lis],
+        Message='Successfully fetch admitted data..'
+    )

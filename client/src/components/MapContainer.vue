@@ -34,7 +34,7 @@ export default {
             AMapLoader.load({
                 key:'e4cea3dd984caafc35ca22d01f3ed807',
                 version:"2.0",
-                plugins:['AMap.ToolBar','AMap.Driving'],
+                plugins:['AMap.ToolBar','AMap.Driving','overlay/SimpleMarker'],
                 AMapUI:{
                     version:"1.1",
                     plugins:[],
@@ -50,13 +50,9 @@ export default {
                     zooms:this.params.zooms,
                     center:this.params.center,
                 });
-                console.log("mapcontainer:", this.params)
                 let positionArr = [
                     [113.357224,34.977186],
                     [114.555528,37.727903],
-                    [112.106257,36.962733],
-                    [109.830097,31.859027],
-                    [116.449181,39.98614],
                 ];
                 if(typeof(this.params.positions) == "undefined"){
                     this.params.positions = positionArr;
@@ -69,14 +65,8 @@ export default {
                     this.map.add(marker);
                 }
 
-
-            }).catch(e=>{
-                console.log(e);
             })
         },
-        addMarker(){
-            
-        }
     },
     mounted(){
         this.initMap();

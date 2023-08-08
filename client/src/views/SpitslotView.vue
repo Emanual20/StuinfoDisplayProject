@@ -20,7 +20,7 @@
           <br><br>
           <h4>历史吐槽</h4>
           <div class="border border-light-subtle p-3 mb-3 border-opacity-50">
-            <div class="card mt-4 mb-4" v-for="niter in $store.state.spitslot.data" :key="niter.id">
+            <div class="card mt-4 mb-4" v-for="niter in spitslots.value" :key="niter.id">
               <h5 class="card-header"> {{ niter["spit_timestamp"] }} </h5>
               <div class="card-body">
                 <p class="card-text"> {{ niter["spit_info"] }} </p>
@@ -51,8 +51,8 @@ export default {
     Footer
   },
   setup(props, context) {
-    let error_message = "";
     let textinfo = "";
+    var spitslots = ref([]);
 
     const FetchSpitslotParams = reactive({
       url: "recentspitslot",
@@ -62,14 +62,14 @@ export default {
 
     FetchRecentSpitslot(FetchSpitslotParams)
     .then(resp => {
-      store.dispatch("UpdateSpitslot", resp.data.data);
+      spitslots.value = resp.data.data;
     })
     .catch(err => {      
     })
 
     return {
-      error_message,
-      textinfo
+      textinfo,
+      spitslots
     };
   },
   methods: {
@@ -82,22 +82,17 @@ export default {
       });
       UploadSpitslotPost(testParams)
         .then(resp => {
+          console.log(this.spitslots.value);
+          this.spitslots.value.unshift({
+            "spit_id": this.spitslots.value[0]["spit_id"] + 1,
+            "spit_info": this.textinfo,
+            "spit_timestamp": "Recent",
+            "stu_uuid": "undefined"
+          });
+          alert("Success..!");
         })
         .catch(err => {
         });
-
-      const FetchSpitslotParams = reactive({
-        url: "recentspitslot",
-        username: store.state.user.username,
-        spitslot_num: 20
-      });
-
-      FetchRecentSpitslot(FetchSpitslotParams)
-      .then(resp => {
-        store.dispatch("UpdateSpitslot", resp.data.data);
-      })
-      .catch(err => {      
-      })
     }
   }
 };

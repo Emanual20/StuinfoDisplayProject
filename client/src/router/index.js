@@ -6,6 +6,7 @@ import RegisterView from "../views/RegisterView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import SelfinfoView from "../views/SelfinfoView.vue";
 import StuinfoView from "../views/StuinfoView.vue";
+import MapView from "../views/MapView.vue";
 import ChangepwdView from "../views/ChangepwdView.vue";
 import ManageInfoView from "../views/ManageInfoView.vue";
 import ManagePermView from "../views/ManagePermView.vue";
@@ -47,6 +48,13 @@ const routes = [
     path: "/stuinfo/",
     name: "Stuinfo",
     component: StuinfoView
+  },
+
+  // 地图预览页面
+  {
+    path: "/mapinfo/",
+    name: "Mapinfo",
+    component: MapView,
   },
 
   // 修改密码页

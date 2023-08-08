@@ -17,6 +17,7 @@
           <!-- <a class="nav-link" @click="changepassword()"> 修改密码 </a> -->
           <a class="nav-link" @click="manageinfo()"> 更新信息 </a>
           <a class="nav-link" @click="checkstuinfo()"> 我的班级 </a>
+          <a class="nav-link" @click="checkmapinfo()"> 地图预览 </a>
           <a class="nav-link" @click="manageperm()"> 权限管理 </a>
           <a class="nav-link" @click="checkspitslot()"> 匿名吐槽 </a>
           <a class="nav-link" @click="logout()"> 退出登录 </a>
@@ -52,6 +53,9 @@ export default {
     },
     checkstuinfo() {
       this.$router.push({ name: "Stuinfo" });
+    },
+    checkmapinfo(){
+      this.$router.push({ name: "Mapinfo" });
     },
     manageinfo() {
       this.$router.push({ name: "Manageinfo" });

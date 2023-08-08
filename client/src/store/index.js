@@ -15,7 +15,8 @@ export default new Vuex.Store({
     nlist: {
       nlist0: [], // bachelor info
       nlist1: [], // graduation info admitted
-      nlist2: [] // graduation info forbiddened
+      nlist2: [], // graduation info forbiddened
+      nmap: [] // map data needed
     },
     spitslot: {
       data: [], // recent spitslot info
@@ -42,6 +43,9 @@ export default new Vuex.Store({
       state.nlist.nlist1 = nlist.nlist1;
       state.nlist.nlist2 = nlist.nlist2;
     },
+    UpdateNmapMuta(state, nlist){
+      state.nlist.nmap = nlist.nmap;
+    },
     UpdateSpitslotMuta(state, ndata){
       state.spitslot.data = ndata.ndata;
     }
@@ -65,6 +69,11 @@ export default new Vuex.Store({
         nlist2: nlist.nlist2
       });
     },
+    UpdateNmapAction(context, nlist) {
+      context.commit("UpdateNmapMuta", {
+        nmap: nlist.nmap,
+      });
+    },    
     UpdateSpitslot(context, ndata){
       context.commit("UpdateSpitslotMuta", {
         ndata: ndata

@@ -1,4 +1,5 @@
 from utils.flask import app, quick_start
+from utils.db.initialize import Initializer
 
 import argparse
 

@@ -1,24 +1,14 @@
 import datetime
 from utils.utils import now_timestamp_mysql
-from pymysql import connect
-from pymysql.cursors import DictCursor
-from config.settings import MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
+from utils.utils.pos import loc2geocode, geocode2loc
+from utils.db.connector import DataConnector
 
-class Book(object):
-    def __init__(self):  # 创建对象同时要执行的代码
-        self.conn = connect(
-            host=MYSQL_HOST,
-            port=MYSQL_PORT,
-            user=MYSQL_USER,
-            password=MYSQL_PASSWORD,
-            database=MYSQL_DATABASE,
-            charset='utf8'
-        )
-        self.cursor=self.conn.cursor(DictCursor)
+class Book(DataConnector):
+    def __init__(self):
+        super().__init__()
 
     def __del__(self):
-        self.cursor.close()
-        self.conn.close()
+        super().__del__()
 
     def get_stu_infos_limit(self):
         sql = 'SELECT * FROM user_info WHERE stu_permission = 3;'
@@ -204,16 +194,31 @@ class Book(object):
 
     # 修改学生个人信息：本科相关
     def update_bachelordest(self, stu_name, params):
-        sql = "SELECT stu_uuid FROM user_info WHERE stu_name = '{}';".format(stu_name)
+        sql = f"SELECT stu_uuid FROM user_info WHERE stu_name = '{stu_name}';"
         self.cursor.execute(sql)
-        stu_uuid = self.cursor.fetchone()['stu_uuid']
+        ret = self.cursor.fetchone()
+        stu_uuid = ret['stu_uuid']
+
+        sql = f"SELECT * FROM user_bachelordest WHERE stu_uuid = '{stu_uuid}';"
+        self.cursor.execute(sql)
+        ret = self.cursor.fetchone()
+        old_school, old_city = ret['stu_bachelorschool'], ret['stu_bachelorcity']
+        
         stu_school = params['bachelor_school']
         stu_city = params['bachelor_city']
         stu_major = params['bachelor_major']
-        stu_major_trans = params['bachelor_major_trans']
         stu_major_second = params['bachelor_major_second']
         now_ts = now_timestamp_mysql()
-        sql = f"UPDATE user_bachelordest as ub SET ub.stu_bachelor_lastupd_timestamp = '{now_ts}', ub.stu_bachelorschool = '{stu_school}', ub.stu_bachelorcity = '{stu_city}', ub.stu_bachelormajor = '{stu_major}', ub.stu_bachelormajorsecond = '{stu_major_second}', ub.stu_bachelormajornew = '{stu_major_trans}' WHERE ub.stu_uuid = '{stu_uuid}';"
+
+        # check if school change
+        if old_school != stu_school or old_city != stu_city:
+            try:
+                new_posx, new_posy = loc2geocode(address=' '.join([stu_city, stu_school]))
+                sql = f"UPDATE user_bachelordest as ub SET ub.stu_bachelor_lastupd_timestamp = '{now_ts}', ub.stu_bachelorschool = '{stu_school}', ub.stu_bachelorcity = '{stu_city}', ub.stu_bachelormajor = '{stu_major}', ub.stu_bachelormajorsecond = '{stu_major_second}', ub.stu_bachelorxpos = {new_posx}, ub.stu_bachelorypos = {new_posy} WHERE ub.stu_uuid = '{stu_uuid}';"
+            except Exception as ne:
+                print(f"ignore Exception {ne} in function update_bachelordest") 
+        else:
+            sql = f"UPDATE user_bachelordest as ub SET ub.stu_bachelor_lastupd_timestamp = '{now_ts}', ub.stu_bachelorschool = '{stu_school}', ub.stu_bachelorcity = '{stu_city}', ub.stu_bachelormajor = '{stu_major}', ub.stu_bachelormajorsecond = '{stu_major_second}' WHERE ub.stu_uuid = '{stu_uuid}';"
         self.cursor.execute(sql)
         return self.conn.commit()
 
@@ -225,9 +230,16 @@ class Book(object):
 
     # 修改学生个人信息：本科毕业，即研究生或工作相关
     def update_masterdest(self, stu_name, params):
-        sql = "SELECT stu_uuid FROM user_info WHERE stu_name = '{}';".format(stu_name)
+        sql = f"SELECT stu_uuid FROM user_info WHERE stu_name = '{stu_name}';"
         self.cursor.execute(sql)
-        stu_uuid = self.cursor.fetchone()['stu_uuid']
+        ret = self.cursor.fetchone()
+        stu_uuid = ret['stu_uuid']
+
+        sql = f"SELECT * FROM user_masterdest WHERE stu_uuid = '{stu_uuid}';"
+        self.cursor.execute(sql)
+        ret = self.cursor.fetchone()
+        old_dest, old_city = ret['stu_dest'], ret['stu_city']
+            
         stu_desttype = params['master_desttype']
         stu_dest = params['master_dest']
         stu_city = params['master_city']
@@ -236,7 +248,16 @@ class Book(object):
         stu_masterorphd = params['master_orphd']
         stu_period = params['master_period']
         now_ts = now_timestamp_mysql()
-        sql = f"UPDATE user_masterdest as um SET um.stu_master_lastupd_timestamp = '{now_ts}', um.stu_desttype = '{stu_desttype}', um.stu_dest = '{stu_dest}', um.stu_city = '{stu_city}', um.stu_mastermajor = '{stu_major}', um.stu_direction = '{stu_direction}', um.stu_masterorphd = '{stu_masterorphd}', um.stu_masterperiod = '{stu_period}' WHERE um.stu_uuid = '{stu_uuid}';"
+
+        # check if dest change
+        if old_dest != stu_dest or old_city != stu_city:
+            try:
+                new_posx, new_posy = loc2geocode(address=' '.join([stu_city, stu_dest]))
+                sql = f"UPDATE user_masterdest as um SET um.stu_master_lastupd_timestamp = '{now_ts}', um.stu_desttype = '{stu_desttype}', um.stu_dest = '{stu_dest}', um.stu_city = '{stu_city}', um.stu_mastermajor = '{stu_major}', um.stu_direction = '{stu_direction}', um.stu_masterorphd = '{stu_masterorphd}', um.stu_masterperiod = '{stu_period}', um.stu_masterxpos = {new_posx}, um.stu_masterypos = {new_posy} WHERE um.stu_uuid = '{stu_uuid}';"
+            except Exception as ne:
+                print(f"ignore Exception {ne} in function update_masterdest") 
+        else:
+            sql = f"UPDATE user_masterdest as um SET um.stu_master_lastupd_timestamp = '{now_ts}', um.stu_desttype = '{stu_desttype}', um.stu_dest = '{stu_dest}', um.stu_city = '{stu_city}', um.stu_mastermajor = '{stu_major}', um.stu_direction = '{stu_direction}', um.stu_masterorphd = '{stu_masterorphd}', um.stu_masterperiod = '{stu_period}' WHERE um.stu_uuid = '{stu_uuid}';"
         self.cursor.execute(sql)
         return self.conn.commit()
 
@@ -245,17 +266,4 @@ class Book(object):
         sql = f"UPDATE user_masterpermission SET stu_permissiontype = {tp}, stu_permission_lastupd_timestamp = '{now_timestamp_mysql()}' WHERE stu_touuid = '{stu_uuid}';" 
         self.cursor.execute(sql)
         return self.conn.commit()
-
-    # 更新所有时间戳
-    def flush_lastupdate_timestamp(self):
-        sql = "SELECT * FROM user_info;"
-        self.cursor.execute(sql)
-        data = self.cursor.fetchall()
-        for each in data:
-            dt = now_timestamp_mysql()
-            sql = f"UPDATE user_bachelordest SET stu_bachelor_lastupd_timestamp = '{dt}' WHERE stu_uuid = '{each['stu_uuid']}';"
-            self.cursor.execute(sql)
-            sql = f"UPDATE user_masterdest SET stu_master_lastupd_timestamp = '{dt}' WHERE stu_uuid = '{each['stu_uuid']}';"
-            self.cursor.execute(sql)
-            self.conn.commit()
-        return 0
+    

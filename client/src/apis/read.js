@@ -58,6 +58,20 @@ export function FetchAdmittedInfoPost(postParams) {
   });
 }
 
+export function FetchMapInfo(postParams) {
+  return service.request({
+    method: "post",
+    url: postParams.url,
+    data: {
+      username: postParams.username,
+      key: postParams.key,
+      secretKey: rsaEncrypt(
+        new Date().getTime() + ":" + "www.baidu.com" + ":" + "otherinfos"
+      ) // 预留字段给加密用
+    }
+  });
+}
+
 export function FetchRecentSpitslot(postParams){
   return service.request({
     method: "post",

@@ -4,75 +4,114 @@
 
     <div class="container">
       <div class="card-body">
-        <h4>我的班级</h4>
+        <div class="p-2 mb-2">
+          <b>我的班级</b>
+
+          <div class="float-right">
+            <a @click="display_bachelor()" class="float">高考去向</a> <a @click="display_dest()" class="float">未来去向</a> 
+          </div>
+        </div>
+
+        <template v-if="display_option.value === '高考去向'">
+
+          
+          <div class="p-4 mb-4" style="height: 500px; overflow-y: auto;  width: 100%; overflow-x: auto;">
+            <h5>本科去向</h5>
+            <table class="p-4 mb-4 table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">姓名</th>
+                  <th scope="col">城市</th>
+                  <th scope="col">学校</th>
+                  <th scope="col">专业</th>
+                  <th scope="col">第二专业</th>
+                  <th scope="col">最近更新时间</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(niter0, index) in $store.state.nlist.nlist0" :key="index">
+                  <th scope="col">{{ niter0.stu_name }}</th>
+                  <th scope="col">{{ niter0.stu_bachelorcity }}</th>
+                  <th scope="col">{{ niter0.stu_bachelorschool }}</th>
+                  <th scope="col">{{ niter0.stu_bachelormajor }}</th>
+                  <th scope="col">{{ niter0.stu_bachelormajorsecond }}</th>
+                  <th scope="col">{{ niter0.stu_bachelor_lastupd_timestamp }}</th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+        </template>
+
+        <template v-else-if="display_option.value === '未来去向'">
+
+
+
+          <div class="p-4 mb-4" style="height: 500px; overflow-y: auto; width: 100%; overflow-x: auto;">
+            <h5>本科及后续去向</h5>
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">姓名</th>
+                  <th scope="col">城市</th>
+                  <th scope="col">去向</th>
+                  <th scope="col">专业/职位</th>
+                  <th scope="col">方向</th>
+                  <th scope="col">硕博</th>
+                  <th scope="col">最近更新时间</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="niter1 in $store.state.nlist.nlist1" :key="niter1.id">
+                  <th scope="col">{{ niter1.stu_name }}</th>
+                  <th scope="col">{{ niter1.stu_city }}</th>
+                  <th scope="col">{{ niter1.stu_dest }}</th>
+                  <th scope="col">{{ niter1.stu_mastermajor }}</th>
+                  <th scope="col">{{ niter1.stu_direction }}</th>
+                  <th scope="col">{{ niter1.stu_masterorphd }}-{{ niter1.stu_masterperiod }}</th>
+                  <th scope="col">{{ niter1.stu_master_lastupd_timestamp }}</th>
+                </tr>
+                <tr v-for="niter2 in $store.state.nlist.nlist2" :key="niter2.id">
+                  <th scope="col">{{ niter2.stu_name }}</th>
+                  <th scope="col">{{ niter2.stu_city }}</th>
+                  <th scope="col">{{ niter2.stu_dest }}</th>
+                  <th scope="col">{{ niter2.stu_mastermajor }}</th>
+                  <th scope="col">{{ niter2.stu_direction }}</th>
+                  <th scope="col">{{ niter2.stu_masterorphd }}-{{ niter2.stu_masterperiod }}</th>
+                  <th scope="col">{{ niter2.stu_master_lastupd_timestamp }}</th>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+        </template>
+
+        <template v-else>
+          nothing display for you.
+        </template>
+
+        <!-- <div class="p-4 mb-4">
+            <h5>地图预览 - 高考去向 </h5>
+            <a>目前地图只能展示国内坐标，且会有一定位置误差，后续修正。</a>
+        </div>
+
+        <div class="p-4 mb-4" style="display: flex; justify-content: center; align-items: center;">
+            <MapContainer :params="bachelor_map_params" data-id="1"></MapContainer>
+          </div> -->
         
-        <div class="p-4 mb-4">
-          <h5>本科去向</h5>
-          <table class="p-4 mb-4 table table-striped table-hover">
-            <thead>
-              <tr>
-                <th scope="col">姓名</th>
-                <th scope="col">城市</th>
-                <th scope="col">学校</th>
-                <th scope="col">专业</th>
-                <th scope="col">第二专业</th>
-                <th scope="col">最近更新时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(niter0, index) in $store.state.nlist.nlist0" :key="index">
-                <th scope="col">{{ niter0.stu_name }}</th>
-                <th scope="col">{{ niter0.stu_bachelorcity }}</th>
-                <th scope="col">{{ niter0.stu_bachelorschool }}</th>
-                <th scope="col">{{ niter0.stu_bachelormajor }}</th>
-                <th scope="col">{{ niter0.stu_bachelormajorsecond }}</th>
-                <th scope="col">{{ niter0.stu_bachelor_lastupd_timestamp }}</th>
-              </tr>
-            </tbody>
-          </table>
+        <!-- <div class="p-4 mb-4">
+            <h5>地图预览 - 后续去向 </h5>
+            <a>目前地图只能展示国内坐标，且会有一定位置误差，后续修正。</a>
         </div>
-      
+
+        <div class="p-4 mb-4" style="display: flex; justify-content: center; align-items: center;">
+            <MapContainer :params="dest_map_params" data-id="2"></MapContainer>
+          </div> -->
+
       <div class="p-4 mb-4">
-        <h5>本科及后续去向</h5>
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th scope="col">姓名</th>
-              <th scope="col">城市</th>
-              <th scope="col">去向</th>
-              <th scope="col">专业/职位</th>
-              <th scope="col">方向</th>
-              <th scope="col">硕博</th>
-              <th scope="col">最近更新时间</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="niter1 in $store.state.nlist.nlist1" :key="niter1.id">
-              <th scope="col">{{ niter1.stu_name }}</th>
-              <th scope="col">{{ niter1.stu_city }}</th>
-              <th scope="col">{{ niter1.stu_dest }}</th>
-              <th scope="col">{{ niter1.stu_mastermajor }}</th>
-              <th scope="col">{{ niter1.stu_direction }}</th>
-              <th scope="col">{{ niter1.stu_masterorphd }}-{{ niter1.stu_masterperiod }}</th>
-              <th scope="col">{{ niter1.stu_master_lastupd_timestamp }}</th>
-            </tr>
-            <tr v-for="niter2 in $store.state.nlist.nlist2" :key="niter2.id">
-              <th scope="col">{{ niter2.stu_name }}</th>
-              <th scope="col">{{ niter2.stu_city }}</th>
-              <th scope="col">{{ niter2.stu_dest }}</th>
-              <th scope="col">{{ niter2.stu_mastermajor }}</th>
-              <th scope="col">{{ niter2.stu_direction }}</th>
-              <th scope="col">{{ niter2.stu_masterorphd }}-{{ niter2.stu_masterperiod }}</th>
-              <th scope="col">{{ niter2.stu_master_lastupd_timestamp }}</th>
-            </tr>
-          </tbody>
-        </table>
-        </div>
       </div>
 
-      <!-- <MapContainer :params="bachelor_map_params"></MapContainer> -->
-
-
+    </div>
     </div>
 
     <Footer />
@@ -82,7 +121,7 @@
 <script>
 import Header from "../components/HeaderComp.vue";
 import Footer from "../components/FooterComp.vue";
-import MapContainer from "../components/MapContainer.vue"
+// import MapContainer from "../components/MapContainer.vue";
 import { FetchAdmittedInfoPost } from "../apis/read.js";
 import { CheckPwPost } from "../apis/read.js";
 import { ref, reactive, onMounted } from "@vue/composition-api";
@@ -94,28 +133,10 @@ export default {
   components: {
     Header,
     Footer,
-    MapContainer
-  },
-  data(){
-    return {
-    }
+    // MapContainer,
   },
   setup(props, context) {
-    // fetch positions from database, positions for example
-    var positions = [
-        [43.24984, 54.879241],
-        [85.491458, 132.258452]
-    ];
-    var zoom = 4;
-    var zooms = [2, 22];
-    var center = [105.602725,37.076636];
-    const bachelor_map_params = reactive({
-      positions: positions,
-      zoom: zoom,
-      zooms: zooms,
-      center: center
-    });
-
+    var display_option = ref('高考去向');
     const FetchInfoParams = reactive({
       url: "fetchadmittedinfo",
       key: "fetchinfo",
@@ -134,13 +155,83 @@ export default {
         this.text = "error" + err;
         alert(this.text);
       });
+    
+    // fetch positions from database, positions for example
+    // var bachelor_positions = [
+    //   [117.17166, 39.13105]
+    // ];
+
+    // console.log("before:", bachelor_positions, store.state.nlist.nlist0);
+
+    // for (const item of store.state.nlist.nlist0){
+    //   var item_posx = item.stu_bachelorxpos;
+    //   var item_posy = item.stu_bachelorypos;
+    //   if (item_posx === null || item_posy === null){
+    //     continue;
+    //   }
+    //   else{
+    //     bachelor_positions.push([item_posx, item_posy]);
+    //   }
+    // }
+
+    // var dest_positions = [
+    //   [117.17166, 39.13105]
+    // ];
+
+    // for (const item of store.state.nlist.nlist1){
+    //   var item_posx = item.stu_masterxpos;
+    //   var item_posy = item.stu_masterypos;
+    //   if (item_posx === null || item_posy === null){
+    //     continue;
+    //   }
+    //   else{
+    //     dest_positions.push([item_posx, item_posy]);
+    //   }
+    // }
+    // for (const item of store.state.nlist.nlist2){
+    //   var item_posx = item.stu_masterxpos;
+    //   var item_posy = item.stu_masterypos;
+    //   if (item_posx === null || item_posy === null){
+    //     continue;
+    //   }
+    //   else{
+    //     dest_positions.push([item_posx, item_posy]);
+    //   }
+    // }
+
+    // var zoom = 5;
+    // var zooms = [3, 18];
+
+    // var bachelor_center = [113.665412,34.757975];
+    // const bachelor_map_params = reactive({
+    //   positions: bachelor_positions,
+    //   zoom: zoom,
+    //   zooms: zooms,
+    //   center: bachelor_center
+    // });
+
+    // var dest_center = [113.665412,34.757975];
+    // const dest_map_params = reactive({
+    //   positions: dest_positions,
+    //   zoom: zoom,
+    //   zooms: zooms,
+    //   center: dest_center
+    // });    
 
     return {
-      bachelor_map_params
+      display_option,
+      // bachelor_map_params,
+      // dest_map_params
     };
   },
 
   methods:{
+    display_bachelor(){
+      this.display_option.value = "高考去向";
+    },
+    display_dest(){
+      this.display_option.value = "未来去向";
+    }
   },
 
 };
