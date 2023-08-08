@@ -83,7 +83,7 @@ def fetch_map_info():
     res_highinfo = book.get_stu_highinfos(nusername)
     res_bachelor = book.get_bachelor_infos(res_highinfo)
 
-    ret_pos_lis = []
+    ret_pos_lis = [[117.17166, 39.13105]]
     for each in res_bachelor:
         xpos, ypos = each['stu_bachelorxpos'], each['stu_bachelorypos']
         if xpos is not None and ypos is not None:
