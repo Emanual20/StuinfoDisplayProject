@@ -11,6 +11,7 @@ def update_self_permission():
     username, stu_uuid, tp = data['username'], data['stu_uuid'], data['tp']
     book = Book()
     ret_info = book.update_masterpermission(username, stu_uuid, tp)
+    app.logger.info(f"{username} update its self permission")
 
     return jsonify(
         RetCode=0,

@@ -8,7 +8,7 @@ import json
 def fetch_self_info():
     data = json.loads(request.get_data(as_text=True))
     if 'stu_uuid' not in data.keys():
-        print('no username in data, fxxk!')
+        app.logger.warning(f'no stu_uuid in data, fxxk!')
         return jsonify(
             RetCode=1,
             Message='failed because no uuid'
@@ -29,14 +29,14 @@ def update_bachelorinfo():
     checklist = ['username', 'infos']
     for key in checklist:
         if key not in data.keys():
-            print(f'no {key} in data, fxxk!')
+            app.logger.warning(f'no {key} in data, fxxk!')
             return jsonify(
                 RetCode=1,
                 Message=f'failed because no {key}'
             )
         
     username, infos = data['username'], data['infos']
-    print(f"{username} update its bachelor info")
+    app.logger.info(f"{username} update its bachelor info")
 
     book = Book()
     book.update_bachelordest(username, infos)
@@ -53,14 +53,14 @@ def update_masterinfo():
     checklist = ['username', 'infos']
     for key in checklist:
         if key not in data.keys():
-            print(f'no {key} in data, fxxk!')
+            app.logger.warning(f'no {key} in data, fxxk!')
             return jsonify(
                 RetCode=1,
                 Message=f'failed because no {key}'
             )
         
     username, infos = data['username'], data['infos']
-    print(username, " update its master info")
+    app.logger.info(f"{username} update its master info")
 
     infos = data['infos']
     book = Book()

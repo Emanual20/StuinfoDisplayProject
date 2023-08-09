@@ -15,7 +15,7 @@ def upload_spitslotinfo():
     
     stu_uuid, spit_info, book = data['stu_uuid'], data['info'], Book()
     book.insert_spitslot(stu_uuid, spit_info)
-    print(stu_uuid, " upload spit_info: ", spit_info)
+    app.logger.info(f"{stu_uuid} upload spit_info: {spit_info}")
     return jsonify(
         RetCode=0,
         Message='上传吐槽信息成功！'        

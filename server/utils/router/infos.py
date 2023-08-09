@@ -31,7 +31,7 @@ def get_all_stuinfos():
 def fetch_admitted_info():
     data = json.loads(request.get_data(as_text=True))
     if 'username' not in data.keys():
-        print('no username in data, fxxk!')
+        app.logger.warning("no username in data, fxxk!")
         resData = {
             "resCode": 1,
             "data": [],
@@ -40,7 +40,8 @@ def fetch_admitted_info():
         return jsonify(resData)
     book = Book()
     nusername = data['username']
-    print(nusername, "request all the admitted info he can check")
+    app.logger.info(f"{nusername} request all the admitted info he can check")
+
     res_highinfo = book.get_stu_highinfos(nusername)
     res_bachelor = book.get_bachelor_infos(res_highinfo)
     res_admitted = book.get_stu_admittedinfos(nusername, res_highinfo)
@@ -70,7 +71,7 @@ def fetch_admitted_info():
 def fetch_map_info():
     data = json.loads(request.get_data(as_text=True))
     if 'username' not in data.keys():
-        print('no username in data, fxxk!')
+        app.logger.warning("no username in data, fxxk!")
         resData = {
             "resCode": 1,
             "data": [],
@@ -79,7 +80,7 @@ def fetch_map_info():
         return jsonify(resData)
     book = Book()
     nusername = data['username']
-    print(nusername, "request all the map info")
+    app.logger.info(f"{nusername} request all the map info")
     res_highinfo = book.get_stu_highinfos(nusername)
     res_bachelor = book.get_bachelor_infos(res_highinfo)
 

@@ -11,7 +11,7 @@ def register_newuser():
     checklist = ['emailaddress', 'username', 'password']
     for key in checklist:
         if key not in data.keys():
-            print(f'no {key} in data, fxxk!')
+            app.logger.warning(f"no {key} in data, fxxk!")
             return jsonify(
                 RetCode=1,
                 Message=f'failed because no {key}'
@@ -21,7 +21,7 @@ def register_newuser():
     emailaddress = data['emailaddress']
     res_matchusername = book.get_matchemail(emailaddress)
     if res_matchusername is not None:
-        print(f"In register_newuser: Email already exists {emailaddress}")
+        app.logger.info(f"In register_newuser: Email already exists {emailaddress}")
         return jsonify(
             RetCode=1,
             Message=f'Email already exists {emailaddress}'             
@@ -35,13 +35,14 @@ def register_newuser():
         hctutor=hightutor
     )
     if MatchItems is None:
-        print(f"In register_newuser: Mismatch ({highbatch}, {highclass}, {hightutor})")
+        app.logger.warning(f"In register_newuser: Mismatch ({highbatch}, {highclass}, {hightutor})")
         return jsonify(
             RetCode=1,
             Message=f'Mismatch hightutor'             
         )
 
     username, password = data['username'], data['password']
+    app.logger.warning(f"{username} register a new account")
     retCode = book.insert_stuifonewuser(emailaddress, username, password, highclass, highbatch)
     return jsonify(
         RetCode=retCode,
@@ -56,9 +57,11 @@ def delete_account():
     try:
         RetCode = book.delete_user(uuid)
         Message = 'Successfully delete an account.'
+        app.logger.warning(f"{uuid} delete an account")
     except:
         RetCode = -1
         Message = 'Delete account failed.'
+        app.logger.warning(f"{uuid} delete an account failed")
 
     return jsonify(
         RetCode=RetCode,
