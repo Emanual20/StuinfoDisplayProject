@@ -7,6 +7,7 @@ import NotFoundView from "../views/NotFoundView.vue";
 import SelfinfoView from "../views/SelfinfoView.vue";
 import StuinfoView from "../views/StuinfoView.vue";
 import MapView from "../views/MapView.vue";
+import AccountDeleteView from "../views/AccountDeleteView.vue";
 import ChangepwdView from "../views/ChangepwdView.vue";
 import ManageInfoView from "../views/ManageInfoView.vue";
 import ManagePermView from "../views/ManagePermView.vue";
@@ -76,6 +77,13 @@ const routes = [
     path: "/manageperm/",
     name: "Manageperm",
     component: ManagePermView
+  },
+
+  // 账号注销页面
+  {
+    path: "/deleteaccount/",
+    name: "DeleteAccount",
+    component: AccountDeleteView
   },
 
   // 吐槽页面

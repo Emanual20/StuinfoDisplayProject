@@ -47,3 +47,20 @@ def register_newuser():
         RetCode=retCode,
         Message='Successfully register a new account.'
     )
+
+@app.route('/deleteuseraccount', methods=['GET', 'POST'])
+def delete_account():
+    data = json.loads(request.get_data(as_text=True))
+    book = Book()
+    uuid = data['stu_uuid']
+    try:
+        RetCode = book.delete_user(uuid)
+        Message = 'Successfully delete an account.'
+    except:
+        RetCode = -1
+        Message = 'Delete account failed.'
+
+    return jsonify(
+        RetCode=RetCode,
+        Message=Message
+    )    

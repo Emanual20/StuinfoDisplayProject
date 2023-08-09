@@ -142,21 +142,21 @@
           <br />
 
           <form class="row g-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <button class="btn btn-primary" @click="TryUpdateSelfinfo()">
                 更新个人信息
               </button>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <button class="btn btn-primary" @click="TryChangepwd()">
                 修改登录密码
               </button>
             </div>
-            <!-- <div class="col-md-4">
-              <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Disabled popover">
-                <button class="btn btn-danger" type="button" @click="TryDeleteAccount()">永久注销账号</button>
-              </span>
-            </div> -->
+            <div class="col-md-4">
+              <button class="btn btn-danger" @click="TryDeleteAccount()">
+                永久注销账号
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -268,15 +268,7 @@ export default {
       router.push({ name: "Changepwd" });
     },
     TryDeleteAccount() {
-      const postparams = reactive({
-        user_uuid: this.$store.state.user.uuid,
-        key: "deleteuseraccount"
-      });
-      DeleteUserAccountPost(postparams)
-        .then(resp => {})
-        .catch(err => {});
-      this.$store.dispatch("LogoutAction", {});
-      this.$router.push({ name: "Home" });
+      this.$router.push({ name: "DeleteAccount" });
     }
   }
 };

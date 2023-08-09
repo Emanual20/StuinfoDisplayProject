@@ -186,6 +186,12 @@ class Book(DataConnector):
         except Exception as ne:
             return 1
 
+    # 永久注销某个用户
+    def delete_user(self, stu_uuid):
+        sql = f"DELETE FROM user_info WHERE stu_uuid = '{stu_uuid}';"
+        self.cursor.execute(sql)
+        return self.conn.commit()
+
     # 添加学生个人信息：本科相关（初始化）
     def insert_init_bachelordest(self, stu_uuid):
         sql = f"INSERT INTO user_bachelordest (stu_uuid, stu_bachelorschool, stu_bachelormajor) VALUES ('{stu_uuid}', '未知', '未知');"
