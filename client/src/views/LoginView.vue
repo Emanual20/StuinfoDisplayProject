@@ -16,7 +16,7 @@
             />
             <div id="emailHelp" class="form-text">
               <b
-                >默认用户名为您的真实中文姓名。如：杨希，王航。</b
+                >默认用户名为您的真实中文姓名。如：杨希。</b
               >
             </div>
           </div>
@@ -32,11 +32,10 @@
             />
             <div id="emailHelp" class="form-text">
               <b
-                >默认密码为生日。如生日为1904.10.17，则默认密码为19041017。如忘记密码或其他事项，请联系<a href="mailto:emanual20@foxmail.com">网站管理员</a>。</b
+                >如忘记密码或其他事项，请联系<a href="mailto:emanual20@foxmail.com">网站管理员</a>。</b
               >
             </div>
           </div>
-          <!-- <div class="error-message"> {{ error_message }} </div> -->
           <button type="submit" class="btn btn-primary">登录</button>
         </form>
       </div>

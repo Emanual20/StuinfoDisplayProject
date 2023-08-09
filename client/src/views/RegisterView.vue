@@ -98,7 +98,7 @@
               aria-describedby="HightutorHelp"
             />
             <div id="HightutorHelp" class="form-text">
-              <b>注册验证问题，作为验证您为真实的用户的唯一凭据。请填写您高中班主任姓名的全拼，如南开的全拼是nankai。</b>
+              <b>注册验证问题，作为验证您为真实用户的凭据。请填写您高中班主任姓名的全拼，如南开的全拼是nankai。</b>
             </div>
           </div>
 

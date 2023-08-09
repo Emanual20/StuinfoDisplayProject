@@ -90,24 +90,6 @@
           nothing display for you.
         </template>
 
-        <!-- <div class="p-4 mb-4">
-            <h5>地图预览 - 高考去向 </h5>
-            <a>目前地图只能展示国内坐标，且会有一定位置误差，后续修正。</a>
-        </div>
-
-        <div class="p-4 mb-4" style="display: flex; justify-content: center; align-items: center;">
-            <MapContainer :params="bachelor_map_params" data-id="1"></MapContainer>
-          </div> -->
-        
-        <!-- <div class="p-4 mb-4">
-            <h5>地图预览 - 后续去向 </h5>
-            <a>目前地图只能展示国内坐标，且会有一定位置误差，后续修正。</a>
-        </div>
-
-        <div class="p-4 mb-4" style="display: flex; justify-content: center; align-items: center;">
-            <MapContainer :params="dest_map_params" data-id="2"></MapContainer>
-          </div> -->
-
       <div class="p-4 mb-4">
       </div>
 

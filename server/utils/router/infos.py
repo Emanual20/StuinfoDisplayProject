@@ -59,7 +59,7 @@ def fetch_admitted_info():
     for each in res_forbidden:
         for key in ['stu_city', 'stu_dest', 'stu_mastermajor', 'stu_direction']:
             if each[key] is None: each[key] = 'UnKnown'
-        each['stu_name'] = '[CLS]'
+        each['stu_name'] = '[MASK]'
 
     return jsonify(
         RetCode=0,
